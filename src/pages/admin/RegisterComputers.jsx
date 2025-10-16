@@ -3,7 +3,9 @@ import React, { useEffect, useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import { appHttpService } from "../../httpServices/appHttpService";
 import { Badge } from "react-bootstrap";
-import { Refresh } from "@mui/icons-material";
+import { ArrowUpward, Refresh } from "@mui/icons-material";
+import Swal from "sweetalert2";
+import { toast } from "react-toastify";
 function RegisterComputers() {
   const columns = [
     {
@@ -82,6 +84,34 @@ function RegisterComputers() {
   useEffect(() => {
     getData();
   }, [paginationModel]);
+
+  const registerComputers = () => {
+    Swal.fire({
+      icon: "question",
+      title: "Push Registered Computers",
+      text: "Are you sure you want to register these computers?\nKindly ensure you do not have any system registered here that belong to another centre as this will result in an infraction.",
+      showCancelButton: true,
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        setLoading(true);
+        const { data, error } = await appHttpService.post(
+          "computer/uploadcomputer",
+          {
+            computers,
+          }
+        );
+
+        if (data) {
+          toast.success(data);
+        }
+
+        if (error) {
+          toast.error(error);
+        }
+        setLoading(false);
+      }
+    });
+  };
   return (
     <div>
       <div className="mt-5">
@@ -128,7 +158,14 @@ function RegisterComputers() {
                   <Badge>{rowCount} Computer(s)</Badge>
                 </div>
                 <div className="col-lg-4">
-                  <Button>Push Registration</Button>
+                  <Button
+                    onClick={registerComputers}
+                    loading={loading}
+                    endIcon={<ArrowUpward />}
+                    loadingPosition="end"
+                  >
+                    Push Registration
+                  </Button>
                 </div>
               </div>
             </div>

@@ -3,7 +3,7 @@ import axios from "axios";
 export const baseURL =
   process.env.NODE_ENV === "production"
     ? "https://miniautotestcentral-be.onrender.com/api/"
-    : "http://192.168.16.136:4000/api/";
+    : "http://192.168.17.122:4000/api/";
 
 const cloudHttpService = axios.create({
   baseURL,

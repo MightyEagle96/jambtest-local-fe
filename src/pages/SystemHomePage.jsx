@@ -17,6 +17,10 @@ function SystemHomePage() {
       setSystemInfo(data);
       console.log(data);
     }
+
+    if (error) {
+      toast.error(error);
+    }
     setLoading(false);
   };
 
@@ -123,6 +127,7 @@ function SystemHomePage() {
                           backgroundColor: "#e67373", // slightly darker for hover
                         },
                       }}
+                      loading={loading}
                     >
                       Register as new computer
                     </Button>

@@ -17,7 +17,7 @@ export const baseURL = getBaseURL();
 const appHttpService = axios.create({
   baseURL,
   withCredentials: true, // always send cookies
-  timeout: 30_000,
+  timeout: 60_000,
 });
 
 // No need to store or attach tokens manually anymore
