@@ -36,6 +36,7 @@ function SystemHomePage() {
       confirmButtonText: "Yes",
     }).then(async (result) => {
       if (result.isConfirmed) {
+        setLoading(true);
         const { data, error } = await appHttpService.post(
           "computer/register",
           systemInfo
@@ -48,6 +49,7 @@ function SystemHomePage() {
         if (error) {
           toast.error(error);
         }
+        setLoading(false);
       }
     });
   };

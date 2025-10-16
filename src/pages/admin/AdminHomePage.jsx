@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useAppUser } from "../../contexts/AppUserContext";
 import {
   Button,
@@ -6,12 +6,34 @@ import {
   CardActions,
   CardContent,
   CardMedia,
+  CircularProgress,
   Typography,
 } from "@mui/material";
+import { appHttpService } from "../../httpServices/appHttpService";
+import { toast } from "react-toastify";
 
 function AdminHomePage() {
   const { user } = useAppUser();
+  const [loading, setLoading] = useState(false);
+  const [dashoardData, setDashboardData] = useState(null);
 
+  const getDashboard = async () => {
+    setLoading(true);
+    const { data, error } = await appHttpService("auth/dashboard");
+    if (data) {
+      setDashboardData(data);
+      console.log(data);
+    }
+
+    if (error) {
+      toast.error(error);
+    }
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    getDashboard();
+  }, []);
   return (
     <div>
       <div
@@ -65,76 +87,83 @@ function AdminHomePage() {
       </div>
 
       <div className="container">
-        <div className="row">
-          <div className="col-lg-4">
-            <Card sx={{ maxWidth: 345 }}>
-              <CardMedia
-                sx={{ height: 140 }}
-                image="https://images.unsplash.com/photo-1643199187247-b3b6009bf0bb?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fGNvbXB1dGVyc3xlbnwwfHwwfHx8MA%3D%3D"
-                title="green iguana"
-              />
-              <CardContent>
-                <Typography gutterBottom variant="h5" component="div">
-                  Computers: 230
-                </Typography>
-                <Typography variant="body2" sx={{ color: "text.secondary" }}>
-                  These are the total number of computers realized in your
-                  centre
-                </Typography>
-              </CardContent>
-              <CardActions>
-                <Button size="small">Share</Button>
-                <Button size="small">Learn More</Button>
-              </CardActions>
-            </Card>
+        {loading && (
+          <div className="text-center">
+            <CircularProgress size={20} />
           </div>
-          <div className="col-lg-4">
-            <Card sx={{ maxWidth: 345 }}>
-              <CardMedia
-                sx={{ height: 140 }}
-                image="https://images.unsplash.com/photo-1629904853716-f0bc54eea481?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8Y29tcHV0ZXIlMjBsYWJ8ZW58MHx8MHx8fDA%3D"
-                title="green iguana"
-              />
-              <CardContent>
-                <Typography gutterBottom variant="h5" component="div">
-                  Network Tests: 230
-                </Typography>
-                <Typography variant="body2" sx={{ color: "text.secondary" }}>
-                  These are the total number of network tests carried out in
-                  your centre
-                </Typography>
-              </CardContent>
-              <CardActions>
-                <Button size="small">Share</Button>
-                <Button size="small">Learn More</Button>
-              </CardActions>
-            </Card>
+        )}
+        {dashoardData && (
+          <div className="row">
+            <div className="col-lg-4">
+              <Card sx={{ maxWidth: 345 }}>
+                <CardMedia
+                  sx={{ height: 140 }}
+                  image="https://images.unsplash.com/photo-1643199187247-b3b6009bf0bb?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fGNvbXB1dGVyc3xlbnwwfHwwfHx8MA%3D%3D"
+                  title="green iguana"
+                />
+                <CardContent>
+                  <Typography gutterBottom variant="h5" component="div">
+                    Computers: {dashoardData.computers}
+                  </Typography>
+                  <Typography variant="body2" sx={{ color: "text.secondary" }}>
+                    These are the total number of computers realized in your
+                    centre
+                  </Typography>
+                </CardContent>
+                <CardActions>
+                  <Button size="small">Share</Button>
+                  <Button size="small">Learn More</Button>
+                </CardActions>
+              </Card>
+            </div>
+            <div className="col-lg-4">
+              <Card sx={{ maxWidth: 345 }}>
+                <CardMedia
+                  sx={{ height: 140 }}
+                  image="https://images.unsplash.com/photo-1629904853716-f0bc54eea481?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8Y29tcHV0ZXIlMjBsYWJ8ZW58MHx8MHx8fDA%3D"
+                  title="green iguana"
+                />
+                <CardContent>
+                  <Typography gutterBottom variant="h5" component="div">
+                    Network Tests: 230
+                  </Typography>
+                  <Typography variant="body2" sx={{ color: "text.secondary" }}>
+                    These are the total number of network tests carried out in
+                    your centre
+                  </Typography>
+                </CardContent>
+                <CardActions>
+                  <Button size="small">Share</Button>
+                  <Button size="small">Learn More</Button>
+                </CardActions>
+              </Card>
+            </div>
+            <div className="col-lg-4">
+              <Card sx={{ maxWidth: 345 }}>
+                <CardMedia
+                  sx={{ height: 140 }}
+                  image="https://plus.unsplash.com/premium_photo-1682310096066-20c267e20605?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8ZXJyb3J8ZW58MHx8MHx8fDA%3D"
+                  title="green iguana"
+                />
+                <CardContent>
+                  <Typography gutterBottom variant="h5" component="div">
+                    Infractions: 0
+                  </Typography>
+                  <Typography variant="body2" sx={{ color: "text.secondary" }}>
+                    This is the number of infractions your centre has committed
+                    in terms of violating our ethics in facility management
+                  </Typography>
+                </CardContent>
+                <CardActions>
+                  <Button size="small">Share</Button>
+                  <Button size="small">Learn More</Button>
+                </CardActions>
+              </Card>
+            </div>
+            <div className="col-lg-4"></div>
+            <div className="col-lg-4"></div>
           </div>
-          <div className="col-lg-4">
-            <Card sx={{ maxWidth: 345 }}>
-              <CardMedia
-                sx={{ height: 140 }}
-                image="https://plus.unsplash.com/premium_photo-1682310096066-20c267e20605?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8ZXJyb3J8ZW58MHx8MHx8fDA%3D"
-                title="green iguana"
-              />
-              <CardContent>
-                <Typography gutterBottom variant="h5" component="div">
-                  Infractions: 0
-                </Typography>
-                <Typography variant="body2" sx={{ color: "text.secondary" }}>
-                  This is the number of infractions your centre has committed in
-                  terms of violating our ethics in facility management
-                </Typography>
-              </CardContent>
-              <CardActions>
-                <Button size="small">Share</Button>
-                <Button size="small">Learn More</Button>
-              </CardActions>
-            </Card>
-          </div>
-          <div className="col-lg-4"></div>
-          <div className="col-lg-4"></div>
-        </div>
+        )}
       </div>
     </div>
   );
