@@ -5,6 +5,7 @@ import Swal from "sweetalert2";
 import { systemHttpService } from "../httpServices/systemHttpService";
 import { appHttpService } from "../httpServices/appHttpService";
 import { toast } from "react-toastify";
+import { DesktopMac } from "@mui/icons-material";
 
 function SystemHomePage() {
   const [loading, setLoading] = useState(false);
@@ -129,6 +130,8 @@ function SystemHomePage() {
                           backgroundColor: "#e67373", // slightly darker for hover
                         },
                       }}
+                      endIcon={<DesktopMac />}
+                      loadingPosition="end"
                       loading={registering}
                     >
                       Register as new computer
