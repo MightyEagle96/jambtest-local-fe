@@ -163,6 +163,7 @@ function RegisterComputers() {
                     loading={loading}
                     endIcon={<ArrowUpward />}
                     loadingPosition="end"
+                    disabled={computers.length === 0}
                   >
                     Push Registration
                   </Button>
