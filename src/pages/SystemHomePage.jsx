@@ -9,13 +9,13 @@ import { toast } from "react-toastify";
 function SystemHomePage() {
   const [loading, setLoading] = useState(false);
   const [systemInfo, setSystemInfo] = useState(null);
+  const [registering, setRegistering] = useState(false);
   const getSystemInfo = async () => {
     setLoading(true);
     const { data, error } = await systemHttpService("/system-info");
 
     if (data) {
       setSystemInfo(data);
-      console.log(data);
     }
 
     if (error) {
@@ -36,7 +36,7 @@ function SystemHomePage() {
       confirmButtonText: "Yes",
     }).then(async (result) => {
       if (result.isConfirmed) {
-        setLoading(true);
+        setRegistering(true);
         const { data, error } = await appHttpService.post(
           "computer/register",
           systemInfo
@@ -49,7 +49,7 @@ function SystemHomePage() {
         if (error) {
           toast.error(error);
         }
-        setLoading(false);
+        setRegistering(false);
       }
     });
   };
@@ -129,7 +129,7 @@ function SystemHomePage() {
                           backgroundColor: "#e67373", // slightly darker for hover
                         },
                       }}
-                      loading={loading}
+                      loading={registering}
                     >
                       Register as new computer
                     </Button>
