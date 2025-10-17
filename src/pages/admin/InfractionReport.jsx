@@ -9,12 +9,12 @@ import { Star } from "@mui/icons-material";
 function InfractionReport() {
   const { user } = useAppUser();
 
-  console.log(user);
   const [paginationModel, setPaginationModel] = useState({
     page: 0, // DataGrid uses 0-based index
     pageSize: 50, // rows per page
   });
   const [rows, setRows] = useState([]);
+  const [rowCount, setRowCount] = useState(0);
 
   const [centresInvolved, setCentresInvolved] = useState([]);
 
@@ -27,9 +27,10 @@ function InfractionReport() {
     });
 
     if (data) {
+      console.log(data);
       setRows(data.results);
       console.log(data);
-      // setRowCount(data.total);
+      setRowCount(data.total);
       // setComputers(data.totalComputers);
     }
   };
@@ -113,6 +114,9 @@ function InfractionReport() {
             fontWeight={700}
           >
             Infraction Reports
+          </Typography>
+          <Typography variant="body2" color="GrayText">
+            Total Infractions committed: {rowCount}
           </Typography>
         </div>
       </div>
