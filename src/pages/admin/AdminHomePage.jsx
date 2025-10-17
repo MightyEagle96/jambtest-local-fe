@@ -147,7 +147,7 @@ function AdminHomePage() {
                 />
                 <CardContent>
                   <Typography gutterBottom variant="h5" component="div">
-                    Infractions: 0
+                    Infractions: {dashoardData.infractions}
                   </Typography>
                   <Typography variant="body2" sx={{ color: "text.secondary" }}>
                     This is the number of infractions your centre has committed
