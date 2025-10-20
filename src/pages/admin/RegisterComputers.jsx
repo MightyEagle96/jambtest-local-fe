@@ -1,4 +1,10 @@
-import { Button, IconButton, Typography } from "@mui/material";
+import {
+  Alert,
+  AlertTitle,
+  Button,
+  IconButton,
+  Typography,
+} from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import { appHttpService } from "../../httpServices/appHttpService";
@@ -38,7 +44,7 @@ function RegisterComputers() {
 
     {
       field: "ramMB",
-      headerName: "RAM (MB)",
+      headerName: "RAM (GB)",
       width: 200,
       renderCell: (params) => `${(params.value / 1000).toFixed(2)} GB`,
     },
@@ -208,14 +214,27 @@ function RegisterComputers() {
               >
                 Register Computers
               </Typography>
-              <Typography gutterBottom color="GrayText">
-                To register a new computer, go to the home page of this
-                application and click on the "Register Computers" button.
-              </Typography>
-              <Typography color="GrayText">
-                Make sure the system report server is running on the client
-                computer.
-              </Typography>
+              <div className="row">
+                <div className="col-lg-8">
+                  <Typography gutterBottom color="GrayText">
+                    To register a new computer, go to the home page of this
+                    application and click on the{" "}
+                    <span className="text-danger">"Register Computers"</span>{" "}
+                    button.
+                  </Typography>
+                  <Typography color="GrayText">
+                    Make sure the system report server is running on the client
+                    computer.
+                  </Typography>
+                </div>
+                <div className="col-lg-4">
+                  <Alert severity="info">
+                    <AlertTitle>Important Notice</AlertTitle>
+                    Please ensure you register <strong>ALL COMPUTERS</strong> in
+                    your facility. Backup computers included.
+                  </Alert>
+                </div>
+              </div>
             </div>
             <div className="mb-3">
               <div className="row">
