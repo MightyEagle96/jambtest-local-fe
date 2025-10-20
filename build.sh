@@ -15,7 +15,7 @@ echo "Committing changes..."
 git commit -m "$1"
 
 echo "Pushing to remote..."
-git push origin master
+git push origin main
 
  
 
