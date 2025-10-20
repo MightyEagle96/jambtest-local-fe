@@ -64,7 +64,7 @@ appHttpService.interceptors.response.use(
 
       try {
         // Try refresh
-        await appHttpService.get("/refresh"); // 🚨 Make sure this matches your backend
+        await appHttpService.get("/auth/refresh"); // 🚨 Make sure this matches your backend
 
         processQueue(null);
         return appHttpService(originalRequest);

@@ -2,11 +2,13 @@ import { Button, IconButton, Stack, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import { appHttpService } from "../../httpServices/appHttpService";
-import { Badge } from "react-bootstrap";
+import { Badge, Modal } from "react-bootstrap";
 import { ArrowUpward, Refresh } from "@mui/icons-material";
 import Swal from "sweetalert2";
 import { toast } from "react-toastify";
 function RegisterComputers() {
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
   const columns = [
     {
       field: "id",
@@ -54,11 +56,38 @@ function RegisterComputers() {
       width: 200,
       renderCell: (params) => params.value.join(", "),
     },
+    {
+      field: "status",
+      headerName: "Status",
+      width: 200,
+      renderCell: (params) => (
+        <span
+          className={
+            params.value === "not uploaded" ? "text-danger" : "text-success"
+          }
+        >
+          {params.value}
+        </span>
+      ),
+    },
+    {
+      field: "flagged",
+      headerName: "Flagged for infraction",
+      width: 200,
+      renderCell: (params) =>
+        params.value ? (
+          <Badge bg="danger">Yes</Badge>
+        ) : (
+          <Badge bg="success">No</Badge>
+        ),
+    },
   ];
 
-  const [rowCount, setRowCount] = useState(0); // total records in DB
+  const [total, setTotal] = useState(0); // total records in DB
   const [computers, setComputers] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [cleanComputers, setCleanComputers] = useState(0);
+  const [infractions, setInfractions] = useState(0);
 
   const [paginationModel, setPaginationModel] = useState({
     page: 0, // DataGrid uses 0-based index
@@ -75,15 +104,25 @@ function RegisterComputers() {
     });
 
     if (data) {
-      setRowCount(data.total);
+      setTotal(data.total);
       setComputers(data.totalComputers);
+      setCleanComputers(data.cleanComputers);
+      setInfractions(data.infractions);
     }
     setLoading(false);
   };
 
   useEffect(() => {
     getData();
+    //getFreshComputers();
   }, [paginationModel]);
+
+  const getFreshComputers = async () => {
+    const { data } = await appHttpService.get("computer/getcomputers");
+    if (data) {
+      getData();
+    }
+  };
 
   const registerComputers = () => {
     Swal.fire({
@@ -102,10 +141,13 @@ function RegisterComputers() {
         );
 
         if (data) {
+          setShow(false);
+          getFreshComputers();
           toast.success(data);
         }
 
         if (error) {
+          console.log(error);
           toast.error(error);
         }
         setLoading(false);
@@ -136,8 +178,8 @@ function RegisterComputers() {
               </Typography>
             </div>
             <div className="mb-3">
-              <div className="row d-flex align-items-end">
-                <div className="col-lg-4">
+              <div className="row">
+                <div className="col-lg-3">
                   <Stack direction={"row"} spacing={2}>
                     <div>
                       <Typography
@@ -155,11 +197,10 @@ function RegisterComputers() {
                       </IconButton>
                     </div>
                   </Stack>
-                  <Badge>{rowCount} Computer(s)</Badge>
                 </div>
-                <div className="col-lg-4">
+                <div className="col-lg-3">
                   <Button
-                    onClick={registerComputers}
+                    onClick={() => setShow(true)}
                     loading={loading}
                     endIcon={<ArrowUpward />}
                     loadingPosition="end"
@@ -167,6 +208,28 @@ function RegisterComputers() {
                   >
                     Push Registration
                   </Button>
+                </div>
+                <div className="col-lg-6 text-center text-muted rounded p-2 bg-light">
+                  <div className="row">
+                    <div className="col-lg-4">
+                      <Typography variant="caption">Total Computers</Typography>
+                      <Typography variant="h5" fontWeight={700}>
+                        {total}
+                      </Typography>
+                    </div>
+                    <div className="col-lg-4">
+                      <Typography variant="caption">Clean Computers</Typography>
+                      <Typography variant="h5" fontWeight={700}>
+                        {cleanComputers}
+                      </Typography>
+                    </div>
+                    <div className="col-lg-4">
+                      <Typography variant="caption">Infractions</Typography>
+                      <Typography variant="h5" fontWeight={700}>
+                        {infractions}
+                      </Typography>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -176,7 +239,7 @@ function RegisterComputers() {
               columns={columns}
               rows={computers}
               loading={loading}
-              rowCount={rowCount}
+              rowCount={total}
               paginationModel={paginationModel}
               onPaginationModelChange={setPaginationModel}
               pageSizeOptions={[50, 100, 200]}
@@ -184,6 +247,42 @@ function RegisterComputers() {
           </div>
         </div>
       </div>
+      <Modal size="lg" centered show={show} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Important Announcements</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div className="alert alert-warning">
+            <div className="row ">
+              <div className="col-lg-1">
+                <h4>1.</h4>
+              </div>
+              <div className="col-lg-10">
+                <p>
+                  Kindly ensure you do not have any system registered here that
+                  belongs to another centre as this will result in an
+                  infraction.
+                </p>
+              </div>
+            </div>
+            <div className="row ">
+              <div className="col-lg-1">
+                <h4>2.</h4>
+              </div>
+              <div className="col-lg-10">
+                <p>
+                  Also note that any system you upload right now will be
+                  permanently tied to your center and cannot be modified later
+                  on or deleted.
+                </p>
+              </div>
+            </div>
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button onClick={registerComputers}>Upload Computers</Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 }

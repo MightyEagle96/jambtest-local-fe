@@ -82,9 +82,12 @@ function SystemHomePage() {
                 </div>
               )}
               {!loading && systemInfo && (
-                <div className="p-3 rounded-3 shadow-sm text-light systemInfo">
+                <div
+                  style={{ backgroundColor: "#41A67E" }}
+                  className="p-3 rounded-3 shadow-sm text-light "
+                >
                   <div className="mb-4">
-                    <Typography variant="h6" fontWeight={300}>
+                    <Typography variant="h4" fontWeight={700}>
                       SYSTEM INFORMATION
                     </Typography>
                     <hr />
@@ -104,7 +107,7 @@ function SystemHomePage() {
                     </Typography>
                   </div>
                   <div className="mb-2">
-                    <Typography variant="overline">RAM (MB)</Typography>
+                    <Typography variant="overline">RAM (GB)</Typography>
                     <Typography fontWeight={700}>{systemInfo.ramMB}</Typography>
                   </div>
                   <div className="mb-2">
