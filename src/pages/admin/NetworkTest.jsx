@@ -1,17 +1,95 @@
 import { Button, TextField, Typography } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Modal } from "react-bootstrap";
+import Swal from "sweetalert2";
+import { appHttpService } from "../../httpServices/appHttpService";
+import { toast } from "react-toastify";
+import { DataGrid } from "@mui/x-data-grid";
+import { Done, Clear } from "@mui/icons-material";
 
 function NetworkTest() {
   const [show, setShow] = useState(false);
   const [duration, setDuration] = useState(0);
-
+  const [rows, setRows] = useState([]);
   const handleClose = () => setShow(false);
 
+  const createNetworkTest = () => {
+    Swal.fire({
+      icon: "question",
+      title: "Create Network Test",
+      text: "Create a new network test to be conducted.",
+      showCancelButton: true,
+      confirmButtonText: "Yes",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const { data, error } = await appHttpService.post(
+          "networktest/create",
+          {
+            duration,
+          }
+        );
+
+        if (data) {
+          getNetworkTests();
+          setShow(false);
+          toast.success(data);
+        }
+
+        if (error) {
+          toast.error(error);
+        }
+      }
+    });
+  };
+
+  const getNetworkTests = async () => {
+    const { data } = await appHttpService("networktest/view");
+
+    if (data) {
+      setRows(data);
+      console.log(data);
+    }
+  };
+
+  const columns = [
+    {
+      field: "id",
+      headerName: "ID",
+      width: 70,
+    },
+    {
+      field: "examId",
+      headerName: "Exam ID",
+      width: 400,
+      renderCell: (params) => (
+        <span className="fw-bold text-uppercase">{params.value}</span>
+      ),
+    },
+    {
+      field: "duration",
+      headerName: "Duration (mins)",
+      width: 200,
+    },
+    {
+      field: "active",
+      headerName: "Active",
+      width: 200,
+      renderCell: (params) =>
+        params.value ? <Done color="success" /> : <Clear color="error" />,
+    },
+    {
+      field: "connectedComputers",
+      headerName: "Connected Computers",
+      width: 200,
+    },
+  ];
+  useEffect(() => {
+    getNetworkTests();
+  }, []);
   return (
     <div>
       <div className="mt-5">
-        <div className="container">
+        <div className="container mb-4">
           <div className="d-flex justify-content-between">
             <div>
               <Typography
@@ -28,11 +106,13 @@ function NetworkTest() {
             </div>
             <div>
               <Button onClick={() => setShow(true)} variant="contained">
-                {" "}
                 Create new network test
               </Button>
             </div>
           </div>
+        </div>
+        <div className="p-3">
+          <DataGrid columns={columns} rows={rows} />
         </div>
       </div>
       <Modal onHide={handleClose} centered show={show}>
@@ -55,7 +135,9 @@ function NetworkTest() {
           </div>
         </Modal.Body>
         <Modal.Footer className="border-0 bg-light">
-          <Button variant="contained">Save</Button>
+          <Button onClick={createNetworkTest} variant="contained">
+            Save
+          </Button>
         </Modal.Footer>
       </Modal>
     </div>
