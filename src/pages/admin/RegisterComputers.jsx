@@ -1,9 +1,9 @@
-import { Button, IconButton, Stack, Typography } from "@mui/material";
+import { Button, IconButton, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import { appHttpService } from "../../httpServices/appHttpService";
 import { Badge, Modal } from "react-bootstrap";
-import { ArrowUpward, Refresh } from "@mui/icons-material";
+import { ArrowUpward, Delete, Refresh } from "@mui/icons-material";
 import Swal from "sweetalert2";
 import { toast } from "react-toastify";
 function RegisterComputers() {
@@ -81,14 +81,53 @@ function RegisterComputers() {
           <Badge bg="success">No</Badge>
         ),
     },
+    {
+      field: "delete",
+      headerName: "Delete",
+      width: 100,
+      renderCell: (params) => (
+        <IconButton
+          onClick={() => deleteComputer(params)}
+          disabled={params.row.status !== "not uploaded"}
+        >
+          <Delete />
+        </IconButton>
+      ),
+    },
   ];
+
+  const deleteComputer = (params) => {
+    Swal.fire({
+      icon: "question",
+      title: "Delete Computer",
+      text: "Are you sure you want to remove this computer from the database?",
+      showCancelButton: true,
+      confirmButtonText: "Yes",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const { data, error } = await appHttpService.delete(
+          `computer/delete/${params.row._id}`
+        );
+        if (data) {
+          toast.success(data);
+          getData();
+          //getFreshComputers();
+        }
+
+        if (error) {
+          toast.error(error);
+        }
+      }
+    });
+  };
 
   const [total, setTotal] = useState(0); // total records in DB
   const [computers, setComputers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [cleanComputers, setCleanComputers] = useState(0);
   const [infractions, setInfractions] = useState(0);
-
+  const [uploaded, setUploaded] = useState(0);
+  const [notUploaded, setNotUploaded] = useState(0);
   const [paginationModel, setPaginationModel] = useState({
     page: 0, // DataGrid uses 0-based index
     pageSize: 50, // rows per page
@@ -108,6 +147,8 @@ function RegisterComputers() {
       setComputers(data.totalComputers);
       setCleanComputers(data.cleanComputers);
       setInfractions(data.infractions);
+      setUploaded(data.uploaded);
+      setNotUploaded(data.notUploaded);
     }
     setLoading(false);
   };
@@ -147,7 +188,6 @@ function RegisterComputers() {
         }
 
         if (error) {
-          console.log(error);
           toast.error(error);
         }
         setLoading(false);
@@ -179,24 +219,52 @@ function RegisterComputers() {
             </div>
             <div className="mb-3">
               <div className="row">
-                <div className="col-lg-3">
-                  <Stack direction={"row"} spacing={2}>
-                    <div>
-                      <Typography
-                        gutterBottom
-                        color="#37353E"
-                        variant="h6"
-                        fontWeight={700}
-                      >
-                        Computer List
+                <div className="col-lg-6 text-center text-muted rounded p-2 bg-light">
+                  <div className="row">
+                    <div className="col-lg-4 mb-1">
+                      <Typography variant="caption">Total Computers</Typography>
+                      <Typography variant="h5" fontWeight={700}>
+                        {total}
                       </Typography>
                     </div>
-                    <div>
-                      <IconButton onClick={getData}>
-                        <Refresh />
-                      </IconButton>
+                    <div className="col-lg-4 mb-1">
+                      <Typography variant="caption">Clean Computers</Typography>
+                      <Typography variant="h5" fontWeight={700}>
+                        {cleanComputers}
+                      </Typography>
                     </div>
-                  </Stack>
+                    <div className="col-lg-4 mb-1">
+                      <Typography variant="caption">Infractions</Typography>
+                      <Typography variant="h5" fontWeight={700}>
+                        {infractions}
+                      </Typography>
+                    </div>
+                    <div className="col-lg-4 mb-1">
+                      <Typography variant="caption">
+                        Uploaded Computers
+                      </Typography>
+                      <Typography variant="h5" fontWeight={700}>
+                        {uploaded}
+                      </Typography>
+                    </div>
+                    <div className="col-lg-4 mb-1">
+                      <Typography variant="caption">
+                        Not Uploaded Computers
+                      </Typography>
+                      <Typography variant="h5" fontWeight={700}>
+                        {notUploaded}
+                      </Typography>
+                    </div>
+                  </div>
+                </div>
+                <div className="col-lg-3">
+                  <Button
+                    color="warning"
+                    onClick={getData}
+                    endIcon={<Refresh />}
+                  >
+                    Refresh computer list
+                  </Button>
                 </div>
                 <div className="col-lg-3">
                   <Button
@@ -208,28 +276,6 @@ function RegisterComputers() {
                   >
                     Push Registration
                   </Button>
-                </div>
-                <div className="col-lg-6 text-center text-muted rounded p-2 bg-light">
-                  <div className="row">
-                    <div className="col-lg-4">
-                      <Typography variant="caption">Total Computers</Typography>
-                      <Typography variant="h5" fontWeight={700}>
-                        {total}
-                      </Typography>
-                    </div>
-                    <div className="col-lg-4">
-                      <Typography variant="caption">Clean Computers</Typography>
-                      <Typography variant="h5" fontWeight={700}>
-                        {cleanComputers}
-                      </Typography>
-                    </div>
-                    <div className="col-lg-4">
-                      <Typography variant="caption">Infractions</Typography>
-                      <Typography variant="h5" fontWeight={700}>
-                        {infractions}
-                      </Typography>
-                    </div>
-                  </div>
                 </div>
               </div>
             </div>
