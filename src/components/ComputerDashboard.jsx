@@ -8,7 +8,6 @@ function ComputerDashboard() {
   const [searchParams] = useSearchParams();
   const [computerDetail, setComputerDetail] = useState(null);
 
-  const networkTest = searchParams.get("networktest");
   const computer = searchParams.get("computer");
 
   // console.log({ networkTest, computer });
@@ -18,7 +17,6 @@ function ComputerDashboard() {
 
     if (data) {
       setComputerDetail(data);
-      console.log(data);
     }
   };
 
