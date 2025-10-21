@@ -14,13 +14,12 @@ function HomePage() {
     const { data, error } = await appHttpService.post("auth/login", {
       ReferenceNumber,
     });
-    console.log(error);
+
     if (data) {
       window.location.reload();
     }
 
     if (error) {
-      console.log(error);
       toast.error(error);
     }
     setLoading(false);

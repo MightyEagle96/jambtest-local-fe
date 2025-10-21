@@ -4,12 +4,14 @@ import InfractionReport from "../pages/admin/InfractionReport";
 import NetworkTest from "../pages/admin/NetworkTest";
 import RegisterComputers from "../pages/admin/RegisterComputers";
 import NavbarComponent from "../components/NavbarComponent";
+import NetworkTestPage from "../pages/admin/NetworkTestPage";
 
 function PrivateAdminRoutes() {
   const routes = [
     { path: "/", element: <AdminHomePage /> },
     { path: "/registercomputers", element: <RegisterComputers /> },
     { path: "/networktest", element: <NetworkTest /> },
+    { path: "/networktest/:id", element: <NetworkTestPage /> },
     { path: "/infractions", element: <InfractionReport /> },
   ];
 

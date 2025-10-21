@@ -1,11 +1,12 @@
 import { Button, TextField, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { Modal } from "react-bootstrap";
+import { Modal, Nav } from "react-bootstrap";
 import Swal from "sweetalert2";
 import { appHttpService } from "../../httpServices/appHttpService";
 import { toast } from "react-toastify";
 import { DataGrid } from "@mui/x-data-grid";
 import { Done, Clear } from "@mui/icons-material";
+import { Link } from "react-router-dom";
 
 function NetworkTest() {
   const [show, setShow] = useState(false);
@@ -92,6 +93,20 @@ function NetworkTest() {
         >
           {params.row.active ? "Deactivate" : "Activate"}
         </Button>
+      ),
+    },
+    {
+      field: "_id",
+      headerName: "View",
+      width: 200,
+      renderCell: (params) => (
+        <Nav.Link
+          className="text-danger"
+          as={Link}
+          to={`/admin/networktest/${params.value}`}
+        >
+          <p>view</p>
+        </Nav.Link>
       ),
     },
   ];
