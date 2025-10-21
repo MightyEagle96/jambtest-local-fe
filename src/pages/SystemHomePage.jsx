@@ -187,7 +187,9 @@ function SystemHomePage() {
                 </div>
                 <div className="mb-2">
                   <Typography variant="overline">RAM (GB)</Typography>
-                  <Typography fontWeight={700}>{systemInfo.ramMB}</Typography>
+                  <Typography fontWeight={700}>
+                    {(systemInfo.ramMB / 1024).toFixed(2)}
+                  </Typography>
                 </div>
                 <div className="mb-2">
                   <Typography variant="overline">Operating system</Typography>

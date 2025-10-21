@@ -46,7 +46,7 @@ function RegisterComputers() {
       field: "ramMB",
       headerName: "RAM (GB)",
       width: 200,
-      renderCell: (params) => `${(params.value / 1000).toFixed(2)} GB`,
+      renderCell: (params) => `${(params.value / 1024).toFixed(2)} GB`,
     },
     { field: "cpuModel", headerName: "CPU Model", width: 200 },
     {
