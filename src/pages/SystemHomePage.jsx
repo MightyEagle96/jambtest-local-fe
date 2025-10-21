@@ -14,6 +14,7 @@ import {
   OutlinedFlag,
 } from "@mui/icons-material";
 import { instructions } from "./instructionsData";
+import { useNavigate } from "react-router-dom";
 
 const errorMessages = {
   noCentre: "No centre found, contact administrator",
@@ -29,6 +30,8 @@ function SystemHomePage() {
   const [registering, setRegistering] = useState(false);
   const [error, setError] = useState("");
   const [errorIcon, setErrorIcon] = useState(null);
+
+  const navigate = useNavigate();
   const getSystemInfo = async () => {
     setLoading(true);
     const { data, error } = await systemHttpService("/system-info");
@@ -96,6 +99,9 @@ function SystemHomePage() {
       );
 
       if (data) {
+        navigate(
+          `/networktest?networktest=${data.networkTest}&computer=${data.computer}`
+        );
         console.log(data);
       }
 
@@ -171,6 +177,12 @@ function SystemHomePage() {
             )}
             {!loading && systemInfo && (
               <div>
+                <div className="mb-2">
+                  <Typography variant="overline">Manufacturer</Typography>
+                  <Typography fontWeight={700}>
+                    {systemInfo.manufacturer}
+                  </Typography>
+                </div>
                 <div className="mb-2">
                   <Typography variant="overline">
                     System Serial Number

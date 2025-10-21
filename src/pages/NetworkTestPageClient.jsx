@@ -1,0 +1,15 @@
+import React from "react";
+import ComputerDashboard from "../components/ComputerDashboard";
+
+function NetworkTestPageClient() {
+  return (
+    <div className="row m-0" style={{ height: "100vh" }}>
+      <div className="col-lg-9"></div>
+      <div className="col-lg-3 bg-light">
+        <ComputerDashboard />
+      </div>
+    </div>
+  );
+}
+
+export default NetworkTestPageClient;

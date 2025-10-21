@@ -6,6 +6,7 @@ import LoadingPage from "../components/LoadingPage";
 import AdminHomePage from "../pages/admin/AdminHomePage";
 import NotFound from "../pages/NotFound";
 import { PrivateAdminRoutes } from "./AdminRoutes";
+import NetworkTestPageClient from "../pages/NetworkTestPageClient";
 
 function MainRoutes() {
   const { user, loading } = useAuth();
@@ -17,6 +18,7 @@ function MainRoutes() {
   const publicRoutes = [
     { path: "/admin", element: <HomePage /> },
     { path: "/", element: <SystemHomePage /> },
+    { path: "/networktest", element: <NetworkTestPageClient /> },
   ];
 
   const privateRoutes = [
