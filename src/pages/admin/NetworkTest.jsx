@@ -82,10 +82,53 @@ function NetworkTest() {
       headerName: "Connected Computers",
       width: 200,
     },
+    {
+      field: "activate",
+      headerName: "Activate",
+      width: 200,
+      renderCell: (params) => (
+        <Button
+          onClick={() => toggleactivation(params.row._id, params.row.active)}
+        >
+          {params.row.active ? "Deactivate" : "Activate"}
+        </Button>
+      ),
+    },
   ];
   useEffect(() => {
     getNetworkTests();
   }, []);
+
+  const toggleactivation = async (id, status) =>
+    Swal.fire({
+      icon: "question",
+      title: `${status ? "Deactivate" : "Activate"} Network Test`,
+      text: `Are you sure you want to ${
+        status ? "deactivate" : "activate"
+      } this network test?`,
+      showCancelButton: true,
+      confirmButtonText: "Yes",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        {
+          const { data, error } = await appHttpService.get(
+            "networktest/toggleactivation",
+            {
+              params: {
+                id,
+              },
+            }
+          );
+          if (data) {
+            toast.success(data);
+            getNetworkTests();
+          }
+          if (error) {
+            toast.error(error);
+          }
+        }
+      }
+    });
   return (
     <div>
       <div className="mt-5">
