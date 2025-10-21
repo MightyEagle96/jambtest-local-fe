@@ -5,7 +5,8 @@ import Swal from "sweetalert2";
 import { systemHttpService } from "../httpServices/systemHttpService";
 import { appHttpService } from "../httpServices/appHttpService";
 import { toast } from "react-toastify";
-import { DesktopMac } from "@mui/icons-material";
+import { DesktopMac, DesktopAccessDisabled } from "@mui/icons-material";
+import { instructions } from "./instructionsData";
 
 function SystemHomePage() {
   const [loading, setLoading] = useState(false);
@@ -20,7 +21,7 @@ function SystemHomePage() {
     }
 
     if (error) {
-      toast.error(error);
+      //toast.error(error);
     }
     setLoading(false);
   };
@@ -56,105 +57,129 @@ function SystemHomePage() {
   };
   return (
     <div>
-      <div className="row m-0 candbg" style={{ height: "100vh" }}>
-        <div className="col-lg-8  d-flex align-items-center text-white">
-          <div className="container w-100 text-center">
-            <img src={logo} className="App-logo" alt="logo" height={100} />
+      <div className="mt-5 text-center">
+        <img src={logo} className="mb-0" alt="logo" height={100} />
 
-            <h1 className="text-white fw-700">JAMB TEST 2.0</h1>
-            <h4 style={{ fontWeight: "lighter" }}>CLIENT CONSOLE</h4>
-          </div>
-        </div>
-        <div className="col-lg-4 p-3 d-flex align-items-center">
-          <div className="w-100 ">
-            {/* <div className="mb-3">
-              <Typography gutterBottom variant="h5" fontWeight={700}>
-                Welcome to JAMB Test 2.0
-              </Typography>
+        <h4 style={{ fontWeight: 700 }}>JAMB TEST 2.0</h4>
+        <h6 style={{ fontWeight: "lighter" }}>
+          CLIENT CONSOLE{" "}
+          {loading && <CircularProgress size={15} color="GrayText" />}
+        </h6>
+      </div>
+
+      <div className="mt-4">
+        <div className="row m-0 d-flex justify-content-center">
+          <div
+            className="col-lg-3 text-center text-light p-3 m-1"
+            style={{ backgroundColor: "#88AB8E" }}
+          >
+            <Typography variant="h6" fontWeight={700}>
+              System Information
+            </Typography>
+            <div className="mb-4">
+              <hr />
             </div>
-            <Nav.Link as={Link} to={"/admin"} className="text-success">
-              Login as admin
-            </Nav.Link> */}
-            <div className="mt-4">
-              {loading && (
-                <div className="text-center">
-                  <CircularProgress color="success" size={20} />
-                </div>
-              )}
-              {!loading && systemInfo && (
-                <div
-                  style={{ backgroundColor: "#41A67E" }}
-                  className="p-3 rounded-3 shadow-sm text-light "
-                >
-                  <div className="mb-4">
-                    <Typography variant="h4" fontWeight={700}>
-                      SYSTEM INFORMATION
-                    </Typography>
-                    <hr />
-                  </div>
-                  <div className="mb-2">
-                    <Typography variant="overline">
-                      System Serial Number
-                    </Typography>
-                    <Typography fontWeight={700}>
-                      {systemInfo.serialNumber}
-                    </Typography>
-                  </div>
-                  <div className="mb-2">
-                    <Typography variant="overline">MAC Address(es)</Typography>
-                    <Typography fontWeight={700}>
-                      {systemInfo.macAddresses.join(", ")}
-                    </Typography>
-                  </div>
-                  <div className="mb-2">
-                    <Typography variant="overline">RAM (GB)</Typography>
-                    <Typography fontWeight={700}>{systemInfo.ramMB}</Typography>
-                  </div>
-                  <div className="mb-2">
-                    <Typography variant="overline">Operating system</Typography>
-                    <Typography fontWeight={700}>
-                      {systemInfo.operatingSystem}
-                    </Typography>
-                  </div>
-                  <div className="mb-2">
-                    <Typography variant="overline">processor id</Typography>
-                    <Typography fontWeight={700}>
-                      {systemInfo.processorId}
-                    </Typography>
-                  </div>
 
-                  <div className="mt-5">
-                    <Button
-                      variant="contained"
-                      onClick={regsiterComputer}
-                      sx={{
-                        backgroundColor: "#FF8282",
-                        "&:hover": {
-                          backgroundColor: "#e67373", // slightly darker for hover
-                        },
-                      }}
-                      endIcon={<DesktopMac />}
-                      loadingPosition="end"
-                      loading={registering}
-                    >
-                      Register as new computer
-                    </Button>
-                  </div>
+            {!loading && !systemInfo && (
+              <div className="text-center">
+                <div className="mb-3">
+                  <DesktopAccessDisabled sx={{ fontSize: 100 }} />
+                  <Typography>No system information found.</Typography>
                 </div>
-              )}
-
-              {!loading && !systemInfo && (
-                <div
-                  className="p-3 rounded text-light"
-                  style={{ backgroundColor: "#FF0066" }}
-                >
-                  <Typography variant="h6" fontWeight={700}>
-                    SYSTEM INFORMATION NOT FOUND
+                <div className="mb-5">
+                  <Typography>
+                    To retrieve system information, kindly ensure the client
+                    service is running on this machine.
                   </Typography>
                 </div>
-              )}
+                <div>
+                  <Button
+                    onClick={getSystemInfo}
+                    endIcon={<DesktopMac sx={{ mr: 1 }} />}
+                    color="inherit"
+                    variant="outlined"
+                  >
+                    Retrieve Information
+                  </Button>
+                </div>
+              </div>
+            )}
+            {!loading && systemInfo && (
+              <div>
+                <div className="mb-2">
+                  <Typography variant="overline">
+                    System Serial Number
+                  </Typography>
+                  <Typography fontWeight={700}>
+                    {systemInfo.serialNumber}
+                  </Typography>
+                </div>
+                <div className="mb-2">
+                  <Typography variant="overline">MAC Address(es)</Typography>
+                  <Typography fontWeight={700}>
+                    {systemInfo.macAddresses.join(", ")}
+                  </Typography>
+                </div>
+                <div className="mb-2">
+                  <Typography variant="overline">RAM (GB)</Typography>
+                  <Typography fontWeight={700}>{systemInfo.ramMB}</Typography>
+                </div>
+                <div className="mb-2">
+                  <Typography variant="overline">Operating system</Typography>
+                  <Typography fontWeight={700}>
+                    {systemInfo.operatingSystem}
+                  </Typography>
+                </div>
+                <div className="mb-2">
+                  <Typography variant="overline">processor id</Typography>
+                  <Typography fontWeight={700}>
+                    {systemInfo.processorId}
+                  </Typography>
+                </div>
+
+                <div className="mt-5">
+                  <Button
+                    variant="contained"
+                    onClick={regsiterComputer}
+                    sx={{
+                      backgroundColor: "#FF8282",
+                      "&:hover": {
+                        backgroundColor: "#e67373", // slightly darker for hover
+                      },
+                    }}
+                    endIcon={<DesktopMac />}
+                    loadingPosition="end"
+                    loading={registering}
+                  >
+                    Register as new computer
+                  </Button>
+                </div>
+              </div>
+            )}
+          </div>
+          <div
+            className="col-lg-3 text-center text-white p-3 m-1"
+            style={{ backgroundColor: "#DC8686" }}
+          >
+            <Typography variant="h6" fontWeight={700}>
+              Important Information
+            </Typography>
+            <div className="mb-4">
+              <hr />
+            </div>
+            <div>
+              {instructions.map((c, i) => (
+                <Typography className="mb-4">
+                  {i + 1}. {c}
+                </Typography>
+              ))}
             </div>
           </div>
+
+          <div
+            className="col-lg-3 p-3 m-1"
+            style={{ backgroundColor: "#EEE7DA" }}
+          ></div>
         </div>
       </div>
     </div>
