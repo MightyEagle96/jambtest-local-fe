@@ -5,13 +5,30 @@ import Swal from "sweetalert2";
 import { systemHttpService } from "../httpServices/systemHttpService";
 import { appHttpService } from "../httpServices/appHttpService";
 import { toast } from "react-toastify";
-import { DesktopMac, DesktopAccessDisabled } from "@mui/icons-material";
+import {
+  DesktopMac,
+  DesktopAccessDisabled,
+  DeveloperBoardOff,
+  MobiledataOff,
+  CloudOff,
+  OutlinedFlag,
+} from "@mui/icons-material";
 import { instructions } from "./instructionsData";
+
+const errorMessages = {
+  noCentre: "No centre found, contact administrator",
+  noComputer: "Computer not yet registered",
+  noActiveTest: "There is no active network test",
+  computerFlagged: "This computer has been flagged for an infraction",
+  notUploaded: "This computer is not yet registered on the JAMB test network",
+};
 
 function SystemHomePage() {
   const [loading, setLoading] = useState(false);
   const [systemInfo, setSystemInfo] = useState(null);
   const [registering, setRegistering] = useState(false);
+  const [error, setError] = useState("");
+  const [errorIcon, setErrorIcon] = useState(null);
   const getSystemInfo = async () => {
     setLoading(true);
     const { data, error } = await systemHttpService("/system-info");
@@ -27,9 +44,19 @@ function SystemHomePage() {
   };
 
   useEffect(() => {
+    // Step 1: Fetch system info once
     getSystemInfo();
+    beginNetworkTest();
   }, []);
 
+  useEffect(() => {
+    // Step 2: Only start polling if systemInfo is available
+    if (!systemInfo) return;
+    const interval = setInterval(() => {
+      beginNetworkTest();
+    }, 10_000);
+    return () => clearInterval(interval);
+  }, [systemInfo]);
   const regsiterComputer = () => {
     Swal.fire({
       icon: "question",
@@ -55,6 +82,44 @@ function SystemHomePage() {
       }
     });
   };
+
+  const beginNetworkTest = async () => {
+    if (systemInfo) {
+      const body = {
+        serialNumber: systemInfo.serialNumber,
+        macAddress: systemInfo.macAddresses[0],
+      };
+
+      const { data, error } = await appHttpService.post(
+        "networktest/begintest",
+        body
+      );
+
+      if (data) {
+        console.log(data);
+      }
+
+      if (error) {
+        error === errorMessages.noCentre &&
+          setErrorIcon(<DeveloperBoardOff sx={{ fontSize: 100 }} />);
+
+        error === errorMessages.noComputer &&
+          setErrorIcon(<DesktopAccessDisabled sx={{ fontSize: 100 }} />);
+
+        error === errorMessages.noActiveTest &&
+          setErrorIcon(<MobiledataOff sx={{ fontSize: 100 }} />);
+
+        error === errorMessages.notUploaded &&
+          setErrorIcon(<CloudOff sx={{ fontSize: 100 }} />);
+
+        error === errorMessages.computerFlagged &&
+          setErrorIcon(<OutlinedFlag sx={{ fontSize: 100 }} />);
+
+        setError(error);
+      }
+    }
+  };
+
   return (
     <div>
       <div className="mt-5 text-center">
@@ -169,7 +234,7 @@ function SystemHomePage() {
             </div>
             <div>
               {instructions.map((c, i) => (
-                <Typography className="mb-4">
+                <Typography key={i} className="mb-4">
                   {i + 1}. {c}
                 </Typography>
               ))}
@@ -177,9 +242,22 @@ function SystemHomePage() {
           </div>
 
           <div
-            className="col-lg-3 p-3 m-1"
+            className="col-lg-3 p-3 m-1 text-muted"
             style={{ backgroundColor: "#EEE7DA" }}
-          ></div>
+          >
+            <div className="text-center">
+              <Typography variant="h6" fontWeight={700}>
+                Network Test
+              </Typography>
+            </div>
+            <div className="mb-4">
+              <hr />
+            </div>
+            <div className="text-center bounce-fade">
+              {errorIcon && errorIcon}
+              {error && <Typography className="mt-5">{error}</Typography>}
+            </div>
+          </div>
         </div>
       </div>
     </div>

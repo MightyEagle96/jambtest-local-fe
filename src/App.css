@@ -43,3 +43,33 @@
 .nav-links .nav-item-link.active-link::after {
   width: 100%; /* underline expands smoothly */
 }
+/* 
+@keyframes slowBounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.slow-bounce {
+  animation: slowBounce 2.5s ease-in-out infinite;
+} */
+
+@keyframes bounceFade {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.8;
+  }
+  50% {
+    transform: translateY(-10px);
+    opacity: 1;
+  }
+}
+
+.bounce-fade {
+  animation: bounceFade 2.5s ease-in-out infinite;
+}
