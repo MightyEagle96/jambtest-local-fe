@@ -3,31 +3,39 @@ import { useSelector } from "react-redux";
 import { CountdownCircleTimer } from "react-countdown-circle-timer";
 import { Typography } from "@mui/material";
 import format from "format-duration";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { appHttpService } from "../httpServices/appHttpService";
-
 function CountDownTimer() {
   const duration = useSelector((state) => state.durationSlice);
   const network = useSelector((state) => state.networkSlice);
   const [loading, setLoading] = useState(false);
   const [timeLeft, setTimeLeft] = useState(0);
-
   const [searchParams] = useSearchParams();
-
   const networktest = searchParams.get("networktest");
   const computer = searchParams.get("computer");
+
+  const navigate = useNavigate();
   const sendResponses = async () => {
     const { data } = await appHttpService.post("networktest/sendresponses", {
       networktest,
       computer,
       timeLeft,
     });
-
     if (data) {
       console.log(data);
     }
   };
 
+  const endNetworkTest = async (type) => {
+    const { data } = await appHttpService.post("networktest/endnetworktest", {
+      networktest,
+      computer,
+    });
+    if (data) {
+      navigate("/");
+      // console.log(data);
+    }
+  };
   return (
     <div>
       <div>
@@ -45,11 +53,10 @@ function CountDownTimer() {
             if (e % 60 === 0) {
               if (timeLeft !== 0) sendResponses();
             }
-
             setTimeLeft(e * 1000);
           }}
           onComplete={() => {
-            //submitExam(submissionTypes.timeup);
+            endNetworkTest();
           }}
         >
           {({ remainingTime }) => remainingTime}
@@ -58,5 +65,4 @@ function CountDownTimer() {
     </div>
   );
 }
-
 export default CountDownTimer;

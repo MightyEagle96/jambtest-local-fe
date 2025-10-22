@@ -12,6 +12,7 @@ import {
   MobiledataOff,
   CloudOff,
   OutlinedFlag,
+  Done,
 } from "@mui/icons-material";
 import { instructions } from "./instructionsData";
 import { useNavigate } from "react-router-dom";
@@ -22,6 +23,7 @@ const errorMessages = {
   noActiveTest: "There is no active network test",
   computerFlagged: "This computer has been flagged for an infraction",
   notUploaded: "This computer is not yet registered on the JAMB test network",
+  alreadyTested: "This computer has already been tested",
 };
 
 function SystemHomePage() {
@@ -120,6 +122,9 @@ function SystemHomePage() {
 
         error === errorMessages.computerFlagged &&
           setErrorIcon(<OutlinedFlag sx={{ fontSize: 100 }} />);
+
+        error === errorMessages.alreadyTested &&
+          setErrorIcon(<Done sx={{ fontSize: 100 }} />);
 
         setError(error);
       }
