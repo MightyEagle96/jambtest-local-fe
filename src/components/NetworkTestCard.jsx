@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { appHttpService } from "../httpServices/appHttpService";
 import Typography from "@mui/material/Typography";
+import { useDispatch } from "react-redux";
+import { setDuration } from "../redux/durationSlice";
 
 function NetworkTestCard() {
   const [searchParams] = useSearchParams();
@@ -9,12 +11,15 @@ function NetworkTestCard() {
   const networkTest = searchParams.get("networktest");
   const [networkTestDetail, setNetworkTestDetail] = useState(null);
 
+  const dispatch = useDispatch();
   const getData = async () => {
     const { data, error } = await appHttpService(
       `networktest/view/${networkTest}`
     );
     if (data) {
       setNetworkTestDetail(data);
+
+      dispatch(setDuration(data.duration));
       console.log(data);
     }
 

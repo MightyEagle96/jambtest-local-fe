@@ -8,11 +8,13 @@ function NetworkTestPage() {
   const { id } = useParams();
   const [test, setTest] = useState(null);
   const [cleanedComputers, setCleanedComputers] = useState([]);
+  const [computerList, setComputerList] = useState([]);
 
   const getData = async () => {
-    const [testData, cleanedComputers] = await Promise.all([
+    const [testData, getComputerList] = await Promise.all([
       appHttpService(`networktest/view/${id}`),
-      appHttpService("computer/cleanedcomputers"),
+
+      appHttpService("networktest/computerlist/" + id),
     ]);
 
     if (testData) {
@@ -21,17 +23,38 @@ function NetworkTestPage() {
       }
     }
 
-    if (cleanedComputers) {
-      if (cleanedComputers.data) {
-        setCleanedComputers(cleanedComputers.data);
+    if (getComputerList) {
+      if (getComputerList.data) {
+        console.log(getComputerList.data);
+        setComputerList(getComputerList.data);
       }
     }
   };
 
   const columns = [
-    //{field:''}
-    // { field: "name", headerName: "Name", width: 150 },
-    // { field: "ip", headerName: "IP", width: 150 },
+    { field: "id", headerName: "ID", width: 50 },
+
+    { field: "ipAddress", headerName: "IP Address", flex: 1 },
+    { field: "responses", headerName: "Responses", flex: 1 },
+    {
+      field: "expected",
+      headerName: "Expected",
+      flex: 1,
+      renderCell: () => (test ? test.duration / 1000 / 60 : 0),
+    },
+    {
+      field: "timeLeft",
+      headerName: "Time Left (min)",
+      flex: 1,
+      renderCell: (params) => params.value / 1000 / 60,
+    },
+    {
+      field: "loggedInAt",
+      headerName: "Logged In At",
+      flex: 1,
+      renderCell: (params) => new Date(params.value).toLocaleString(),
+    },
+    // {field:''}
   ];
 
   useEffect(() => {
@@ -74,7 +97,9 @@ function NetworkTestPage() {
                 </div>
               </div>
             </div>
-            <div className="p-3">{/* <DataGridPro /> */}</div>
+            <div className="p-3">
+              <DataGridPro rows={computerList} columns={columns} />
+            </div>
           </>
         )}
       </div>

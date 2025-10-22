@@ -1,6 +1,7 @@
 import React from "react";
 import ComputerDashboard from "../components/ComputerDashboard";
 import NetworkTestCard from "../components/NetworkTestCard";
+import CountDownTimer from "../components/CountDownTimer";
 
 function NetworkTestPageClient() {
   return (
@@ -8,6 +9,7 @@ function NetworkTestPageClient() {
       <div className="col-lg-9">
         <div className="p-3">
           <NetworkTestCard />
+          <CountDownTimer />
         </div>
       </div>
       <div className="col-lg-3 bg-light">
