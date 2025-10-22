@@ -37,6 +37,7 @@ function NetworkTestPage() {
 
     { field: "ipAddress", headerName: "IP Address", flex: 1 },
     { field: "responses", headerName: "Responses", flex: 1 },
+    { field: "networkLosses", headerName: "Network Losses", flex: 1 },
     {
       field: "expected",
       headerName: "Expected",
@@ -52,6 +53,12 @@ function NetworkTestPage() {
     {
       field: "loggedInAt",
       headerName: "Logged In At",
+      flex: 1,
+      renderCell: (params) => new Date(params.value).toLocaleString(),
+    },
+    {
+      field: "endedAt",
+      headerName: "Ended At",
       flex: 1,
       renderCell: (params) => new Date(params.value).toLocaleString(),
     },
