@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { appHttpService } from "../httpServices/appHttpService";
 import Typography from "@mui/material/Typography";
 import { useDispatch } from "react-redux";
@@ -9,17 +9,30 @@ function NetworkTestCard() {
   const [searchParams] = useSearchParams();
 
   const networkTest = searchParams.get("networktest");
+  const computer = searchParams.get("computer");
   const [networkTestDetail, setNetworkTestDetail] = useState(null);
+
+  const navigate = useNavigate();
 
   const dispatch = useDispatch();
   const getData = async () => {
-    const { data, error } = await appHttpService(
-      `networktest/view/${networkTest}`
+    const { data, error, status } = await appHttpService(
+      "networktest/myresponse",
+      {
+        headers: {
+          networktest: networkTest,
+          computer: computer,
+        },
+      }
     );
-    if (data) {
-      setNetworkTestDetail(data);
 
-      dispatch(setDuration(data.duration));
+    if (status === 404) {
+      navigate("/");
+    }
+    if (data) {
+      setNetworkTestDetail(data.networkTest);
+
+      dispatch(setDuration(data.timeLeft));
       console.log(data);
     }
 

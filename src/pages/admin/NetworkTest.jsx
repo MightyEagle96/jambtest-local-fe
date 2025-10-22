@@ -1,11 +1,11 @@
-import { Button, TextField, Typography } from "@mui/material";
+import { Button, IconButton, TextField, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { Modal, Nav } from "react-bootstrap";
 import Swal from "sweetalert2";
 import { appHttpService } from "../../httpServices/appHttpService";
 import { toast } from "react-toastify";
 import { DataGrid } from "@mui/x-data-grid";
-import { Done, Clear } from "@mui/icons-material";
+import { Done, Clear, Delete } from "@mui/icons-material";
 import { Link } from "react-router-dom";
 
 function NetworkTest() {
@@ -109,10 +109,50 @@ function NetworkTest() {
         </Nav.Link>
       ),
     },
+    {
+      field: "delete",
+      headerName: "Delete",
+      width: 200,
+      renderCell: (params) => (
+        <IconButton onClick={() => deleteExamination(params.row._id)}>
+          <Delete />
+        </IconButton>
+      ),
+    },
   ];
   useEffect(() => {
     getNetworkTests();
   }, []);
+
+  const deleteExamination = (id) => {
+    Swal.fire({
+      icon: "question",
+      title: "Delete Test",
+      text: "Are you sure you want to delete this test?",
+      showCancelButton: true,
+      confirmButtonText: "Yes",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        {
+          const { data, error } = await appHttpService.get(
+            "networktest/delete",
+            {
+              params: {
+                id,
+              },
+            }
+          );
+          if (data) {
+            toast.success(data);
+            getNetworkTests();
+          }
+          if (error) {
+            toast.error(error);
+          }
+        }
+      }
+    });
+  };
 
   const toggleactivation = async (id, status) =>
     Swal.fire({
