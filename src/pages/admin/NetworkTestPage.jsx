@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { appHttpService } from "../../httpServices/appHttpService";
 import { Chip, Typography } from "@mui/material";
 import { DataGridPro } from "@mui/x-data-grid-pro";
+import format from "format-duration";
 
 function NetworkTestPage() {
   const { id } = useParams();
@@ -46,7 +47,7 @@ function NetworkTestPage() {
       field: "timeLeft",
       headerName: "Time Left (min)",
       flex: 1,
-      renderCell: (params) => params.value / 1000 / 60,
+      renderCell: (params) => format(params.value),
     },
     {
       field: "loggedInAt",
@@ -59,6 +60,14 @@ function NetworkTestPage() {
 
   useEffect(() => {
     getData();
+
+    const interval = setInterval(() => {
+      getData();
+    }, 60_000);
+
+    return () => {
+      clearInterval(interval);
+    };
   }, []);
 
   return (
