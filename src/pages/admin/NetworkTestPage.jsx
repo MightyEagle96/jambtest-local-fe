@@ -62,9 +62,29 @@ function NetworkTestPage() {
       flex: 1,
       renderCell: (params) => new Date(params.value).toLocaleString(),
     },
+    {
+      field: "status",
+      headerName: "Status",
+      flex: 1,
+
+      renderCell: (params) => (
+        <span className={"text-uppercase " + switchStatus(params.value)}>
+          {params.value}
+        </span>
+      ),
+    },
     // {field:''}
   ];
 
+  function switchStatus(status) {
+    if (status === "connected") {
+      return "text-success";
+    } else if (status === "disconnected") {
+      return "text-danger";
+    } else if (status === "ended") {
+      return "text-warning";
+    }
+  }
   useEffect(() => {
     getData();
 
