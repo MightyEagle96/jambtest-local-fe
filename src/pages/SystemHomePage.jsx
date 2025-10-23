@@ -146,7 +146,7 @@ function SystemHomePage() {
       <div className="mt-4">
         <div className="row m-0 d-flex justify-content-center">
           <div
-            className="col-lg-3   text-light p-3 m-1"
+            className="col-lg-4   text-light p-3 m-1"
             style={{ backgroundColor: "#88AB8E" }}
           >
             <Typography textAlign={"center"} variant="h6" fontWeight={700}>
