@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { appHttpService } from "../../httpServices/appHttpService";
-import { Chip, Typography } from "@mui/material";
+import { Chip, IconButton, Typography } from "@mui/material";
 import { DataGridPro } from "@mui/x-data-grid-pro";
 import format from "format-duration";
+import { DesktopMacOutlined } from "@mui/icons-material";
+import { Modal } from "react-bootstrap";
 
 function NetworkTestPage() {
   const { id } = useParams();
   const [test, setTest] = useState(null);
   const [cleanedComputers, setCleanedComputers] = useState([]);
   const [computerList, setComputerList] = useState([]);
-
+  const [computer, setComputer] = useState(null);
   const getData = async () => {
     const [testData, getComputerList] = await Promise.all([
       appHttpService(`networktest/view/${id}`),
@@ -34,6 +36,15 @@ function NetworkTestPage() {
 
   const columns = [
     { field: "id", headerName: "ID", width: 50 },
+    {
+      field: "view",
+      headerName: "View",
+      renderCell: (params) => (
+        <IconButton onClick={() => setComputer(params.row)}>
+          <DesktopMacOutlined />
+        </IconButton>
+      ),
+    },
 
     { field: "ipAddress", headerName: "IP Address", flex: 1 },
     { field: "responses", headerName: "Responses", flex: 1 },
@@ -141,6 +152,53 @@ function NetworkTestPage() {
           </>
         )}
       </div>
+      <Modal show={computer} onHide={() => setComputer(null)}>
+        <Modal.Header closeButton>
+          <Modal.Title>{computer && computer.ipAddress}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {computer && (
+            <>
+              <div className="mb-2">
+                <Typography variant="overline">Manufacturer</Typography>
+                <Typography fontWeight={700}>
+                  {computer.computer.manufacturer}
+                </Typography>
+              </div>
+              <div className="mb-2">
+                <Typography variant="overline">System Serial Number</Typography>
+                <Typography fontWeight={700}>
+                  {computer.computer.serialNumber}
+                </Typography>
+              </div>
+              <div className="mb-2">
+                <Typography variant="overline">MAC Address(es)</Typography>
+                <Typography fontWeight={700}>
+                  {computer.computer.macAddresses.join(", ")}
+                </Typography>
+              </div>
+              <div className="mb-2">
+                <Typography variant="overline">RAM (GB)</Typography>
+                <Typography fontWeight={700}>
+                  {(computer.computer.ramMB / 1024).toFixed(2)}
+                </Typography>
+              </div>
+              <div className="mb-2">
+                <Typography variant="overline">Operating system</Typography>
+                <Typography fontWeight={700}>
+                  {computer.computer.operatingSystem}
+                </Typography>
+              </div>
+              <div className="mb-2">
+                <Typography variant="overline">processor id</Typography>
+                <Typography fontWeight={700}>
+                  {computer.computer.processorId}
+                </Typography>
+              </div>
+            </>
+          )}
+        </Modal.Body>
+      </Modal>
     </div>
   );
 }
