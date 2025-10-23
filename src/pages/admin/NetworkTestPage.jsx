@@ -54,13 +54,15 @@ function NetworkTestPage() {
       field: "loggedInAt",
       headerName: "Logged In At",
       flex: 1,
-      renderCell: (params) => new Date(params.value).toLocaleString(),
+      renderCell: (params) =>
+        params.value ? new Date(params.value).toLocaleString() : "-",
     },
     {
       field: "endedAt",
       headerName: "Ended At",
       flex: 1,
-      renderCell: (params) => new Date(params.value).toLocaleString(),
+      renderCell: (params) =>
+        params.value ? new Date(params.value).toLocaleString() : "-",
     },
     {
       field: "status",
