@@ -146,10 +146,10 @@ function SystemHomePage() {
       <div className="mt-4">
         <div className="row m-0 d-flex justify-content-center">
           <div
-            className="col-lg-3 text-center text-light p-3 m-1"
+            className="col-lg-3   text-light p-3 m-1"
             style={{ backgroundColor: "#88AB8E" }}
           >
-            <Typography variant="h6" fontWeight={700}>
+            <Typography textAlign={"center"} variant="h6" fontWeight={700}>
               System Information
             </Typography>
             <div className="mb-4">
@@ -182,42 +182,44 @@ function SystemHomePage() {
             )}
             {!loading && systemInfo && (
               <div>
-                <div className="mb-2">
-                  <Typography variant="overline">Manufacturer</Typography>
-                  <Typography fontWeight={700}>
-                    {systemInfo.manufacturer}
+                <div className="mb-3">
+                  <Typography>
+                    Manufacturer: <b>{systemInfo.manufacturer}</b>
                   </Typography>
                 </div>
-                <div className="mb-2">
-                  <Typography variant="overline">
-                    System Serial Number
-                  </Typography>
-                  <Typography fontWeight={700}>
-                    {systemInfo.serialNumber}
+                <div className="mb-3">
+                  <Typography>
+                    Model: <b>{systemInfo.model}</b>
                   </Typography>
                 </div>
-                <div className="mb-2">
-                  <Typography variant="overline">MAC Address(es)</Typography>
-                  <Typography fontWeight={700}>
-                    {systemInfo.macAddresses.join(", ")}
+                <div className="mb-3">
+                  <Typography>
+                    System Serial Number: <b>{systemInfo.serialNumber}</b>
                   </Typography>
                 </div>
-                <div className="mb-2">
-                  <Typography variant="overline">RAM (GB)</Typography>
-                  <Typography fontWeight={700}>
-                    {(systemInfo.ramMB / 1024).toFixed(2)}
+                <div className="mb-3">
+                  <Typography>
+                    MAC Address(es): <b>{systemInfo.macAddresses.join(", ")}</b>
                   </Typography>
                 </div>
-                <div className="mb-2">
-                  <Typography variant="overline">Operating system</Typography>
-                  <Typography fontWeight={700}>
-                    {systemInfo.operatingSystem}
+                <div className="mb-3">
+                  <Typography>
+                    RAM: <b>{(systemInfo.ramMB / 1024).toFixed(2)} GB</b>
                   </Typography>
                 </div>
-                <div className="mb-2">
-                  <Typography variant="overline">processor id</Typography>
-                  <Typography fontWeight={700}>
-                    {systemInfo.processorId}
+                <div className="mb-3">
+                  <Typography>
+                    Operating system: <b>{systemInfo.operatingSystem}</b>
+                  </Typography>
+                </div>
+                <div className="mb-3">
+                  <Typography>
+                    Processor ID: <b>{systemInfo.processorId}</b>
+                  </Typography>
+                </div>
+                <div className="mb-3">
+                  <Typography>
+                    CPU Model: <b>{systemInfo.cpuModel}</b>
                   </Typography>
                 </div>
 
@@ -242,10 +244,10 @@ function SystemHomePage() {
             )}
           </div>
           <div
-            className="col-lg-3 text-center text-white p-3 m-1"
+            className="col-lg-3  text-white p-3 m-1"
             style={{ backgroundColor: "#DC8686" }}
           >
-            <Typography variant="h6" fontWeight={700}>
+            <Typography textAlign={"center"} variant="h6" fontWeight={700}>
               Important Information
             </Typography>
             <div className="mb-4">
