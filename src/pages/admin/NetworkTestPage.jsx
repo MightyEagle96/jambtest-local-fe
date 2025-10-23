@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { appHttpService } from "../../httpServices/appHttpService";
 import { Chip, IconButton, Typography } from "@mui/material";
-import { DataGridPro } from "@mui/x-data-grid-pro";
+import { DataGrid } from "@mui/x-data-grid";
 import format from "format-duration";
 import { DesktopMacOutlined } from "@mui/icons-material";
 import { Modal } from "react-bootstrap";
@@ -13,11 +13,18 @@ function NetworkTestPage() {
   const [cleanedComputers, setCleanedComputers] = useState([]);
   const [computerList, setComputerList] = useState([]);
   const [computer, setComputer] = useState(null);
+  const [dashboard, setDashoard] = useState(null);
   const getData = async () => {
-    const [testData, getComputerList] = await Promise.all([
+    const [testData, getComputerList, testDashboard] = await Promise.all([
       appHttpService(`networktest/view/${id}`),
 
       appHttpService("networktest/computerlist/" + id),
+
+      appHttpService("networktest/dashboard", {
+        params: {
+          id,
+        },
+      }),
     ]);
 
     if (testData) {
@@ -28,8 +35,15 @@ function NetworkTestPage() {
 
     if (getComputerList) {
       if (getComputerList.data) {
-        console.log(getComputerList.data);
         setComputerList(getComputerList.data);
+      }
+    }
+
+    if (testDashboard) {
+      if (testDashboard.data) {
+        console.log(testDashboard.data);
+        setDashoard(testDashboard.data);
+        //setCleanedComputers(testDashboard.data);
       }
     }
   };
@@ -115,7 +129,7 @@ function NetworkTestPage() {
       <div className="mt-4 ">
         {test && (
           <>
-            <div className="container">
+            <div className="container mb-4">
               <div className="mb-1">
                 <Typography variant="caption" gutterBottom>
                   Test ID
@@ -146,8 +160,72 @@ function NetworkTestPage() {
                 </div>
               </div>
             </div>
+            <div className="mb-5">
+              <div className="container">
+                {dashboard && (
+                  <div>
+                    <div className="d-flex flex-wrap bg-light p-3 text-muted">
+                      <div className="col-lg-3">
+                        <Typography variant="overline">computers</Typography>
+                        <Typography variant="h6">
+                          {dashboard.totalComputers}
+                        </Typography>
+                      </div>
+                      <div className="col-lg-3">
+                        <Typography variant="overline">connected</Typography>
+                        <Typography variant="h6">
+                          {dashboard.connected}
+                        </Typography>
+                      </div>
+                      <div className="col-lg-3">
+                        <Typography variant="overline">disconnected</Typography>
+                        <Typography variant="h6">
+                          {dashboard.disconnected}
+                        </Typography>
+                      </div>
+                      <div className="col-lg-3">
+                        <Typography variant="overline">ended</Typography>
+                        <Typography variant="h6">{dashboard.ended}</Typography>
+                      </div>
+                      <div className="col-lg-3">
+                        <Typography variant="overline">
+                          Total Network Losses
+                        </Typography>
+                        <Typography variant="h6">
+                          {dashboard.totalNetworkLosses}
+                        </Typography>
+                      </div>
+                      <div className="col-lg-3">
+                        <Typography variant="overline">
+                          Computers with network losses
+                        </Typography>
+                        <Typography variant="h6">
+                          {dashboard.computersWithNetworkLosses}
+                        </Typography>
+                      </div>
+                      <div className="col-lg-3">
+                        <Typography variant="overline">
+                          Responses/Expected
+                        </Typography>
+                        <Typography variant="h6">
+                          {dashboard.totalResponses}/{dashboard.expected}
+                        </Typography>
+                      </div>
+                      <div className="col-lg-3">
+                        <Typography variant="overline">
+                          Response Throughput
+                        </Typography>
+                        <Typography variant="h6">
+                          {dashboard.responseThroughput}%
+                        </Typography>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
             <div className="p-3">
-              <DataGridPro rows={computerList} columns={columns} />
+              <DataGrid rows={computerList} columns={columns} />
             </div>
           </>
         )}
@@ -158,7 +236,7 @@ function NetworkTestPage() {
         </Modal.Header>
         <Modal.Body>
           {computer && (
-            <>
+            <div className="text-uppercase">
               <div className="mb-2">
                 <Typography variant="overline">Manufacturer</Typography>
                 <Typography fontWeight={700}>
@@ -195,7 +273,7 @@ function NetworkTestPage() {
                   {computer.computer.processorId}
                 </Typography>
               </div>
-            </>
+            </div>
           )}
         </Modal.Body>
       </Modal>
