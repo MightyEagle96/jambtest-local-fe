@@ -31,7 +31,7 @@ function ComputerDashboard() {
           <div className="text-muted   text-wrap">
             <div
               className="mb-4 pt-2 pb-2 text-white  text-center"
-              style={{ backgroundColor: "#016B61" }}
+              style={{ backgroundColor: "#59AC77" }}
             >
               <DesktopMacOutlined sx={{ fontSize: 80 }} />
             </div>

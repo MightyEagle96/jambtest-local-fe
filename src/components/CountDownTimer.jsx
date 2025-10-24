@@ -72,12 +72,12 @@ function CountDownTimer() {
   };
   return (
     <div className="container">
-      <div className="d-flex justify-content-between">
-        <div className="col-lg-7">
+      <div className="d-flex justify-content-between align-items-center">
+        <div className="col-lg-10">
           {networkTestDetail && (
-            <div className="c alert alert-primary border-0">
-              <div className="d-flex flex wrap">
-                <div className="me-3 border-end">
+            <div className="c alert alert-light border-0">
+              <div className="d-flex justify-content-between">
+                <div className="">
                   <Typography variant="caption">Network Test ID:</Typography>
                   <Typography fontWeight={700} textTransform={"uppercase"}>
                     {networkTestDetail.examId}
@@ -90,14 +90,13 @@ function CountDownTimer() {
                     {networkTestDetail.duration / 1000 / 60} mins
                   </Typography>
                 </div>
+                <div>
+                  <Typography variant="caption">Time Left:</Typography>
+                  <Typography fontWeight={700}>{format(timeLeft)}</Typography>
+                </div>
               </div>
             </div>
           )}
-        </div>
-        <div className="col-lg-2 text-end">
-          <Typography variant="h5" fontWeight={700}>
-            {format(timeLeft)}
-          </Typography>
         </div>
       </div>
 
@@ -121,20 +120,25 @@ function CountDownTimer() {
         </CountdownCircleTimer>
       </div>
 
-      <div className="mt-5">
+      <div className="mt-3 rounded p-3 rounded bg-light">
         <div className="mb-3">
           <Typography variant="caption">Question</Typography>
-          <Typography fontSize={24}>{question?.question}</Typography>
+          <Typography fontSize={22}>{question?.question}</Typography>
         </div>
         <div className="mb-3">
           <Typography variant="caption">Options</Typography>
 
           {question?.options.map((option, index) => (
-            <Typography fontSize={20} key={index} gutterBottom>
+            <Typography fontSize={18} key={index} gutterBottom>
               {index + 1}. {option}
             </Typography>
           ))}
         </div>
+      </div>
+      <div className="text-center mt-3">
+        <Typography>
+          {question.responses}/{question.maxResponses} questions answered
+        </Typography>
       </div>
     </div>
   );
