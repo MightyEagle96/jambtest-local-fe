@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { appHttpService } from "../../httpServices/appHttpService";
-import { Chip, IconButton, Typography } from "@mui/material";
+import { Button, Chip, IconButton, Typography } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import format from "format-duration";
 import { DesktopMacOutlined } from "@mui/icons-material";
 import { Modal } from "react-bootstrap";
+import Swal from "sweetalert2";
+import { toast } from "react-toastify";
 
 function NetworkTestPage() {
   const { id } = useParams();
@@ -14,6 +16,8 @@ function NetworkTestPage() {
   const [computerList, setComputerList] = useState([]);
   const [computer, setComputer] = useState(null);
   const [dashboard, setDashoard] = useState(null);
+
+  const navigate = useNavigate();
   const getData = async () => {
     const [testData, getComputerList, testDashboard] = await Promise.all([
       appHttpService(`networktest/view/${id}`),
@@ -124,39 +128,81 @@ function NetworkTestPage() {
     };
   }, []);
 
+  const endNetworkTest = () => {
+    Swal.fire({
+      icon: "question",
+      title: "End Network Test",
+      showDenyButton: true,
+      confirmButtonText: "Yes",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const { data, error } = await appHttpService.get(
+          "networktest/endnetworktestadmin",
+          {
+            params: {
+              id,
+            },
+          }
+        );
+        if (data) {
+          toast.success(data);
+          navigate("/admin/networktest");
+        }
+        if (error) {
+          toast.error(error);
+        }
+      }
+    });
+  };
+
   return (
     <div>
       <div className="mt-4 ">
         {test && (
           <>
             <div className="container mb-4">
-              <div className="mb-1">
-                <Typography variant="caption" gutterBottom>
-                  Test ID
-                </Typography>
-                <Typography
-                  variant="h6"
-                  fontWeight={700}
-                  textTransform={"uppercase"}
-                >
-                  {test.examId}
-                </Typography>
-              </div>
               <div className="row">
-                <div className="col-lg-3">
-                  <Typography variant="caption">Duration</Typography>
-                  <Typography>{test.duration / 1000 / 60} minutes</Typography>
-                </div>
-                <div className="col-lg-3">
-                  <div>
-                    <Typography gutterBottom variant="caption">
-                      Status
+                <div className="col-lg-6">
+                  <div className="mb-1">
+                    <Typography variant="caption" gutterBottom>
+                      Test ID
+                    </Typography>
+                    <Typography
+                      variant="h6"
+                      fontWeight={700}
+                      textTransform={"uppercase"}
+                    >
+                      {test.examId}
                     </Typography>
                   </div>
-                  <Chip
-                    label={test.active ? "Active" : "Inactive"}
-                    color={test.active ? "success" : "error"}
-                  />
+                  <div className="row">
+                    <div className="col-lg-6">
+                      <Typography variant="caption">Duration</Typography>
+                      <Typography>
+                        {test.duration / 1000 / 60} minutes
+                      </Typography>
+                    </div>
+                    <div className="col-lg-6">
+                      <div>
+                        <Typography gutterBottom variant="caption">
+                          Status
+                        </Typography>
+                      </div>
+                      <Chip
+                        label={test.active ? "Active" : "Inactive"}
+                        color={test.active ? "success" : "error"}
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div className="col-lg-6 text-end">
+                  <Button
+                    onClick={endNetworkTest}
+                    variant="contained"
+                    color="error"
+                  >
+                    End network test
+                  </Button>
                 </div>
               </div>
             </div>
