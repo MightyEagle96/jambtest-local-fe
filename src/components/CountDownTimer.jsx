@@ -6,6 +6,12 @@ import format from "format-duration";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { appHttpService } from "../httpServices/appHttpService";
 function CountDownTimer() {
+  const [question, setQuestion] = useState({
+    question: "Network Test has begun",
+    options: [],
+    responses: 0,
+    maxResponses: 0,
+  });
   const duration = useSelector((state) => state.durationSlice);
   const network = useSelector((state) => state.networkSlice);
   const [loading, setLoading] = useState(false);
@@ -14,15 +20,43 @@ function CountDownTimer() {
   const networktest = searchParams.get("networktest");
   const computer = searchParams.get("computer");
 
+  const networkTestDetail = useSelector(
+    (state) => state.networkTestDetailSlice
+  );
+
   const navigate = useNavigate();
   const sendResponses = async () => {
-    const { data } = await appHttpService.post("networktest/sendresponses", {
-      networktest,
-      computer,
-      timeLeft,
-    });
+    const { data, status } = await appHttpService.post(
+      "networktest/sendresponses",
+      {
+        networktest,
+        computer,
+        timeLeft,
+      }
+    );
+
+    if (status === 404) {
+      navigate("/");
+      return;
+    }
+    if (data) {
+      getQuestionAndResponses();
+      // console.log(data);
+    }
+  };
+
+  const getQuestionAndResponses = async () => {
+    const { data } = await appHttpService.post(
+      "networktest/questionandresponsecount",
+      {
+        networktest,
+        computer,
+      }
+    );
+
     if (data) {
       console.log(data);
+      setQuestion(data);
     }
   };
 
@@ -37,12 +71,36 @@ function CountDownTimer() {
     }
   };
   return (
-    <div>
-      <div>
-        <Typography variant="h5" fontWeight={700}>
-          {format(timeLeft)}
-        </Typography>
+    <div className="container">
+      <div className="d-flex justify-content-between">
+        <div className="col-lg-7">
+          {networkTestDetail && (
+            <div className="c alert alert-primary border-0">
+              <div className="d-flex flex wrap">
+                <div className="me-3 border-end">
+                  <Typography variant="caption">Network Test ID:</Typography>
+                  <Typography fontWeight={700} textTransform={"uppercase"}>
+                    {networkTestDetail.examId}
+                  </Typography>
+                </div>
+
+                <div>
+                  <Typography variant="caption">Duration:</Typography>
+                  <Typography fontWeight={700}>
+                    {networkTestDetail.duration / 1000 / 60} mins
+                  </Typography>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+        <div className="col-lg-2 text-end">
+          <Typography variant="h5" fontWeight={700}>
+            {format(timeLeft)}
+          </Typography>
+        </div>
       </div>
+
       <div className="d-none">
         <CountdownCircleTimer
           isPlaying={network}
@@ -61,6 +119,22 @@ function CountDownTimer() {
         >
           {({ remainingTime }) => remainingTime}
         </CountdownCircleTimer>
+      </div>
+
+      <div className="mt-5">
+        <div className="mb-3">
+          <Typography variant="caption">Question</Typography>
+          <Typography fontSize={24}>{question?.question}</Typography>
+        </div>
+        <div className="mb-3">
+          <Typography variant="caption">Options</Typography>
+
+          {question?.options.map((option, index) => (
+            <Typography fontSize={20} key={index} gutterBottom>
+              {index + 1}. {option}
+            </Typography>
+          ))}
+        </div>
       </div>
     </div>
   );

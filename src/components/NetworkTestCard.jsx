@@ -4,13 +4,14 @@ import { appHttpService } from "../httpServices/appHttpService";
 import Typography from "@mui/material/Typography";
 import { useDispatch } from "react-redux";
 import { setDuration } from "../redux/durationSlice";
+import { setNetworkTestDetail } from "../redux/networkTestDetail";
 
 function NetworkTestCard() {
   const [searchParams] = useSearchParams();
 
   const networkTest = searchParams.get("networktest");
   const computer = searchParams.get("computer");
-  const [networkTestDetail, setNetworkTestDetail] = useState(null);
+  //const [networkTestDetail, setNetworkTestDetail] = useState(null);
 
   const navigate = useNavigate();
 
@@ -30,7 +31,9 @@ function NetworkTestCard() {
       navigate("/");
     }
     if (data) {
-      setNetworkTestDetail(data.networkTest);
+      // setNetworkTestDetail(data.networkTest);
+
+      dispatch(setNetworkTestDetail(data.networkTest));
 
       dispatch(setDuration(data.timeLeft));
       console.log(data);
@@ -46,12 +49,12 @@ function NetworkTestCard() {
   }, []);
   return (
     <>
-      {networkTestDetail && (
+      {/* {networkTestDetail && (
         <div className="col-lg-6 alert alert-primary border-0">
           <div className="d-flex flex wrap">
             <div className="me-3 border-end">
               <Typography variant="caption">Network Test ID:</Typography>
-              <Typography fontWeight={700}>
+              <Typography fontWeight={700} textTransform={"uppercase"}>
                 {networkTestDetail.examId}
               </Typography>
             </div>
@@ -64,7 +67,7 @@ function NetworkTestCard() {
             </div>
           </div>
         </div>
-      )}
+      )} */}
     </>
   );
 }

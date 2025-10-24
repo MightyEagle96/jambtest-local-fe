@@ -40,6 +40,10 @@ function ComputerDashboard() {
                 </Typography>
               </div>
               <div className="mb-2">
+                <Typography variant="overline">Model</Typography>
+                <Typography fontWeight={700}>{computerDetail.model}</Typography>
+              </div>
+              <div className="mb-2">
                 <Typography variant="overline">System Serial Number</Typography>
                 <Typography fontWeight={700}>
                   {computerDetail.serialNumber}
@@ -67,6 +71,12 @@ function ComputerDashboard() {
                 <Typography variant="overline">processor id</Typography>
                 <Typography fontWeight={700}>
                   {computerDetail.processorId}
+                </Typography>
+              </div>
+              <div className="mb-2">
+                <Typography variant="overline">cpu model</Typography>
+                <Typography fontWeight={700}>
+                  {computerDetail.cpuModel}
                 </Typography>
               </div>
               <div className="mb-2">
