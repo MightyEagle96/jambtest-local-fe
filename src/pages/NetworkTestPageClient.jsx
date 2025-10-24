@@ -12,7 +12,7 @@ function NetworkTestPageClient() {
           <CountDownTimer />
         </div>
       </div>
-      <div className="col-lg-3 bg-light">
+      <div className="col-lg-3 m-0 bg-light">
         <ComputerDashboard />
       </div>
     </div>

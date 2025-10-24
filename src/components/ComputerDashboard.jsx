@@ -28,60 +28,85 @@ function ComputerDashboard() {
     <div>
       {computerDetail && (
         <div className="pt-5">
-          <div className="text-center text-muted text-uppercase text-wrap">
-            <div className="mb-4">
-              <DesktopMacOutlined sx={{ fontSize: 100 }} />
+          <div className="text-muted   text-wrap">
+            <div
+              className="mb-4 pt-2 pb-2 text-white  text-center"
+              style={{ backgroundColor: "#016B61" }}
+            >
+              <DesktopMacOutlined sx={{ fontSize: 80 }} />
             </div>
-            <div>
-              <div className="mb-2">
-                <Typography variant="overline">Manufacturer</Typography>
-                <Typography fontWeight={700}>
-                  {computerDetail.manufacturer}
+            <div className="p-3">
+              <div className="mb-3">
+                <Typography>
+                  Manufacturer:{" "}
+                  <span className="fw-bold text-uppercase">
+                    {computerDetail.manufacturer}
+                  </span>
                 </Typography>
               </div>
-              <div className="mb-2">
-                <Typography variant="overline">Model</Typography>
-                <Typography fontWeight={700}>{computerDetail.model}</Typography>
-              </div>
-              <div className="mb-2">
-                <Typography variant="overline">System Serial Number</Typography>
-                <Typography fontWeight={700}>
-                  {computerDetail.serialNumber}
+              <div className="mb-3">
+                <Typography>
+                  Model:{" "}
+                  <span className="fw-bold text-uppercase">
+                    {computerDetail.model}
+                  </span>
                 </Typography>
               </div>
-              <div className="mb-2">
-                <Typography variant="overline">MAC Address(es)</Typography>
-                <Typography fontWeight={700}>
-                  {computerDetail.macAddresses.join(", ")}
+              <div className="mb-3">
+                <Typography>
+                  Serial Number:{" "}
+                  <span className="fw-bold text-uppercase">
+                    {computerDetail.serialNumber}
+                  </span>
                 </Typography>
               </div>
-              <div className="mb-2">
-                <Typography variant="overline">RAM (GB)</Typography>
-                <Typography fontWeight={700}>
-                  {(computerDetail.ramMB / 1024).toFixed(2)}
+              <div className="mb-3">
+                <Typography>
+                  MAC Address(es):{" "}
+                  <span className="fw-bold text-uppercase">
+                    {computerDetail.macAddresses.join(", ")}
+                  </span>
                 </Typography>
               </div>
-              <div className="mb-2">
-                <Typography variant="overline">Operating system</Typography>
-                <Typography fontWeight={700}>
-                  {computerDetail.operatingSystem}
+              <div className="mb-3">
+                <Typography>
+                  RAM (GB):{" "}
+                  <span className="fw-bold text-uppercase">
+                    {(computerDetail.ramMB / 1024).toFixed(2)}
+                  </span>
                 </Typography>
               </div>
-              <div className="mb-2">
-                <Typography variant="overline">processor id</Typography>
-                <Typography fontWeight={700}>
-                  {computerDetail.processorId}
+              <div className="mb-3">
+                <Typography>
+                  Operating System:{" "}
+                  <span className="fw-bold text-uppercase">
+                    {computerDetail.operatingSystem}
+                  </span>
                 </Typography>
               </div>
-              <div className="mb-2">
-                <Typography variant="overline">cpu model</Typography>
-                <Typography fontWeight={700}>
-                  {computerDetail.cpuModel}
+              <div className="mb-3">
+                <Typography>
+                  Processor ID:{" "}
+                  <span className="fw-bold text-uppercase">
+                    {computerDetail.processorId}
+                  </span>
                 </Typography>
               </div>
-              <div className="mb-2">
-                <Typography variant="overline">IP Address</Typography>
-                <Typography fontWeight={700}>{computerDetail.ip}</Typography>
+              <div className="mb-3">
+                <Typography>
+                  CPU Model:{" "}
+                  <span className="fw-bold text-uppercase">
+                    {computerDetail.cpuModel}
+                  </span>
+                </Typography>
+              </div>
+              <div className="mb-3">
+                <Typography>
+                  IP Address:{" "}
+                  <span className="fw-bold text-uppercase">
+                    {computerDetail.ip}
+                  </span>
+                </Typography>
               </div>
             </div>
           </div>
