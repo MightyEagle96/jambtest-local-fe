@@ -1,22 +1,36 @@
 import React, { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { appHttpService } from "../httpServices/appHttpService";
 import { DesktopMacOutlined } from "@mui/icons-material";
 import Typography from "@mui/material/Typography";
+import { useDispatch } from "react-redux";
+import { setDuration } from "../redux/durationSlice";
+import { setNetworkTestDetail } from "../redux/networkTestDetail";
 
 function ComputerDashboard() {
   const [searchParams] = useSearchParams();
   const [computerDetail, setComputerDetail] = useState(null);
 
+  const dispatch = useDispatch();
+
+  const navigate = useNavigate();
   const computer = searchParams.get("computer");
 
   // console.log({ networkTest, computer });
 
   const getcomputer = async () => {
-    const { data } = await appHttpService(`computer/viewcomputer/${computer}`);
+    const { data, status } = await appHttpService(
+      `computer/viewcomputer/${computer}`
+    );
 
     if (data) {
       setComputerDetail(data);
+    }
+
+    if (status === 404) {
+      navigate("/");
+      dispatch(setDuration(0));
+      dispatch(setNetworkTestDetail(null));
     }
   };
 

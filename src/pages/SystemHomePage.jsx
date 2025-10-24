@@ -16,6 +16,9 @@ import {
 } from "@mui/icons-material";
 import { instructions } from "./instructionsData";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setDuration } from "../redux/durationSlice";
+import { setNetworkTestDetail } from "../redux/networkTestDetail";
 
 const errorMessages = {
   noCentre: "No centre found, contact administrator",
@@ -34,6 +37,8 @@ function SystemHomePage() {
   const [errorIcon, setErrorIcon] = useState(null);
 
   const navigate = useNavigate();
+
+  const dispatch = useDispatch();
   const getSystemInfo = async () => {
     setLoading(true);
     const { data, error } = await systemHttpService("/system-info");
@@ -96,6 +101,8 @@ function SystemHomePage() {
       );
 
       if (data) {
+        dispatch(setDuration(0));
+        dispatch(setNetworkTestDetail(null));
         navigate(
           `/networktest?networktest=${data.networkTest}&computer=${data.computer}`
         );

@@ -36,40 +36,13 @@ function NetworkTestCard() {
       dispatch(setNetworkTestDetail(data.networkTest));
 
       dispatch(setDuration(data.timeLeft));
-      console.log(data);
-    }
-
-    if (error) {
-      console.log(error);
     }
   };
 
   useEffect(() => {
     getData();
   }, []);
-  return (
-    <>
-      {/* {networkTestDetail && (
-        <div className="col-lg-6 alert alert-primary border-0">
-          <div className="d-flex flex wrap">
-            <div className="me-3 border-end">
-              <Typography variant="caption">Network Test ID:</Typography>
-              <Typography fontWeight={700} textTransform={"uppercase"}>
-                {networkTestDetail.examId}
-              </Typography>
-            </div>
-
-            <div>
-              <Typography variant="caption">Duration:</Typography>
-              <Typography fontWeight={700}>
-                {networkTestDetail.duration / 1000 / 60} mins
-              </Typography>
-            </div>
-          </div>
-        </div>
-      )} */}
-    </>
-  );
+  return <></>;
 }
 
 export default NetworkTestCard;
