@@ -90,14 +90,9 @@ function SystemHomePage() {
 
   const beginNetworkTest = async () => {
     if (systemInfo) {
-      const body = {
-        serialNumber: systemInfo.serialNumber,
-        macAddress: systemInfo.macAddresses[0],
-      };
-
       const { data, error } = await appHttpService.post(
         "networktest/begintest",
-        body
+        systemInfo
       );
 
       if (data) {
