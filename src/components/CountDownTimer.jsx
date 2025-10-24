@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { CountdownCircleTimer } from "react-countdown-circle-timer";
-import { Typography } from "@mui/material";
+import { LinearProgress, Typography } from "@mui/material";
 import format from "format-duration";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { appHttpService } from "../httpServices/appHttpService";
@@ -135,10 +135,18 @@ function CountDownTimer() {
           ))}
         </div>
       </div>
-      <div className="text-center mt-3">
-        <Typography>
-          {question.responses}/{question.maxResponses} questions answered
-        </Typography>
+      <div className="text-center mt-5">
+        <div>
+          <Typography fontWeight={700} color="#456882">
+            {question.responses}/{question.maxResponses} questions answered
+          </Typography>
+        </div>
+        <div className="mt-5">
+          <LinearProgress
+            variant="determinate"
+            value={(question.responses / question.maxResponses) * 100}
+          />
+        </div>
       </div>
     </div>
   );
