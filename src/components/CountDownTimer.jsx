@@ -79,7 +79,7 @@ function CountDownTimer() {
         <>
           <div className="d-flex justify-content-between align-items-center">
             <div className="col-lg-10">
-              <div className="c alert alert-danger border-0">
+              <div className="c alert alert-success border-0">
                 <div className="d-flex justify-content-between">
                   <div className="">
                     <Typography variant="caption">Network Test ID:</Typography>
