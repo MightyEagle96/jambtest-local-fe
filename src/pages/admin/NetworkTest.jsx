@@ -120,7 +120,8 @@ function NetworkTest() {
       field: "timeEnded",
       headerName: "Time Ended",
       width: 200,
-      renderCell: (params) => params.value,
+      renderCell: (params) =>
+        params.value ? new Date(params.value).toLocaleString() : "-",
     },
     {
       field: "delete",

@@ -15,7 +15,7 @@ function CountDownTimer() {
       "Ensure connectivity",
       "Ensure security",
       "Ensure speed",
-      "Other",
+      "Ensure packet delivery",
     ],
     responses: 0,
     maxResponses: 0,

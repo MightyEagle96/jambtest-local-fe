@@ -198,6 +198,7 @@ function NetworkTestPage() {
                 <div className="col-lg-6 text-end">
                   <Button
                     onClick={endNetworkTest}
+                    disabled={!test.active}
                     variant="contained"
                     color="error"
                   >
