@@ -161,7 +161,7 @@ function AdminHomePage() {
                 <CardActions className="mb-5">
                   <Nav.Link
                     as={Link}
-                    to="/admin/infractions"
+                    to="/admin/networktest"
                     className="infraction-link"
                   >
                     <p className="text-muted ps-2">

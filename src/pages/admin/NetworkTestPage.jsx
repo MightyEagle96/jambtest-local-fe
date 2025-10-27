@@ -12,7 +12,7 @@ import { toast } from "react-toastify";
 function NetworkTestPage() {
   const { id } = useParams();
   const [test, setTest] = useState(null);
-  const [cleanedComputers, setCleanedComputers] = useState([]);
+
   const [loading, setLoading] = useState(false);
   const [computerList, setComputerList] = useState([]);
   const [computer, setComputer] = useState(null);
@@ -47,7 +47,6 @@ function NetworkTestPage() {
 
     if (testDashboard) {
       if (testDashboard.data) {
-        console.log(testDashboard.data);
         setDashoard(testDashboard.data);
         //setCleanedComputers(testDashboard.data);
       }
