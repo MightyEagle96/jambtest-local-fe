@@ -5,7 +5,7 @@ import Swal from "sweetalert2";
 import { appHttpService } from "../../httpServices/appHttpService";
 import { toast } from "react-toastify";
 import { DataGrid } from "@mui/x-data-grid";
-import { Done, Clear, Delete } from "@mui/icons-material";
+import { Done, Clear, Delete, Upload } from "@mui/icons-material";
 import { Link } from "react-router-dom";
 
 function NetworkTest() {
@@ -71,30 +71,13 @@ function NetworkTest() {
       headerName: "Duration (mins)",
       width: 200,
     },
-    {
-      field: "active",
-      headerName: "Active",
-      width: 200,
-      renderCell: (params) =>
-        params.value ? <Done color="success" /> : <Clear color="error" />,
-    },
+
     {
       field: "connectedComputers",
       headerName: "Connected Computers",
       width: 200,
     },
-    {
-      field: "activate",
-      headerName: "Activate",
-      width: 200,
-      renderCell: (params) => (
-        <Button
-          onClick={() => toggleactivation(params.row._id, params.row.active)}
-        >
-          {params.row.active ? "Deactivate" : "Activate"}
-        </Button>
-      ),
-    },
+
     {
       field: "_id",
       headerName: "View",
@@ -108,6 +91,13 @@ function NetworkTest() {
           <p>view</p>
         </Nav.Link>
       ),
+    },
+    {
+      field: "active",
+      headerName: "Active",
+      width: 200,
+      renderCell: (params) =>
+        params.value ? <Done color="success" /> : <Clear color="error" />,
     },
     {
       field: "ended",
@@ -124,12 +114,35 @@ function NetworkTest() {
         params.value ? new Date(params.value).toLocaleString() : "-",
     },
     {
-      field: "delete",
-      headerName: "Delete",
+      field: "activate",
+      headerName: "Activate",
       width: 200,
       renderCell: (params) => (
+        <Button
+          sx={{ textTransform: "capitalize" }}
+          onClick={() => toggleactivation(params.row._id, params.row.active)}
+        >
+          {params.row.active ? "Deactivate" : "Activate"}
+        </Button>
+      ),
+    },
+    {
+      field: "upload",
+      headerName: "Upload",
+      width: 150,
+      renderCell: (params) => (
+        <IconButton>
+          <Upload color="success" />
+        </IconButton>
+      ),
+    },
+    {
+      field: "delete",
+      headerName: "Delete",
+      width: 150,
+      renderCell: (params) => (
         <IconButton onClick={() => deleteExamination(params.row._id)}>
-          <Delete />
+          <Delete color="error" />
         </IconButton>
       ),
     },

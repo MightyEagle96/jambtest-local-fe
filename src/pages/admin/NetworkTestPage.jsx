@@ -13,12 +13,14 @@ function NetworkTestPage() {
   const { id } = useParams();
   const [test, setTest] = useState(null);
   const [cleanedComputers, setCleanedComputers] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [computerList, setComputerList] = useState([]);
   const [computer, setComputer] = useState(null);
   const [dashboard, setDashoard] = useState(null);
 
   const navigate = useNavigate();
   const getData = async () => {
+    setLoading(true);
     const [testData, getComputerList, testDashboard] = await Promise.all([
       appHttpService(`networktest/view/${id}`),
 
@@ -50,6 +52,8 @@ function NetworkTestPage() {
         //setCleanedComputers(testDashboard.data);
       }
     }
+
+    setLoading(false);
   };
 
   const columns = [
@@ -272,7 +276,11 @@ function NetworkTestPage() {
               </div>
             </div>
             <div className="p-3">
-              <DataGrid rows={computerList} columns={columns} />
+              <DataGrid
+                rows={computerList}
+                columns={columns}
+                loading={loading}
+              />
             </div>
           </>
         )}

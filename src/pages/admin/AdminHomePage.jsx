@@ -11,18 +11,22 @@ import {
 } from "@mui/material";
 import { appHttpService } from "../../httpServices/appHttpService";
 import { toast } from "react-toastify";
+import { useNavigate, Link } from "react-router-dom";
+import { ArrowRight } from "@mui/icons-material";
+import { Nav } from "react-bootstrap";
 
 function AdminHomePage() {
   const { user } = useAppUser();
   const [loading, setLoading] = useState(false);
   const [dashoardData, setDashboardData] = useState(null);
 
+  const navigate = useNavigate();
+
   const getDashboard = async () => {
     setLoading(true);
     const { data, error } = await appHttpService("auth/dashboard");
     if (data) {
       setDashboardData(data);
-      console.log(data);
     }
 
     if (error) {
@@ -102,17 +106,31 @@ function AdminHomePage() {
                   title="green iguana"
                 />
                 <CardContent>
-                  <Typography gutterBottom variant="h5" component="div">
-                    Computers: {dashoardData.computers}
+                  <Typography
+                    gutterBottom
+                    fontSize={24}
+                    fontWeight={300}
+                    component="div"
+                  >
+                    Computers:{" "}
+                    <span style={{ fontWeight: 700 }}>
+                      {dashoardData.computers}
+                    </span>
                   </Typography>
                   <Typography variant="body2" sx={{ color: "text.secondary" }}>
-                    These are the total number of computers realized in your
-                    centre
+                    This is the number of computers realized in your centre
                   </Typography>
                 </CardContent>
-                <CardActions>
-                  <Button size="small">Share</Button>
-                  <Button size="small">Learn More</Button>
+                <CardActions className="mb-5">
+                  <Nav.Link
+                    as={Link}
+                    to="/admin/registercomputers"
+                    className="infraction-link"
+                  >
+                    <p className="text-muted ps-2">
+                      VIEW COMPUTERS <ArrowRight />
+                    </p>
+                  </Nav.Link>
                 </CardActions>
               </Card>
             </div>
@@ -124,17 +142,32 @@ function AdminHomePage() {
                   title="green iguana"
                 />
                 <CardContent>
-                  <Typography gutterBottom variant="h5" component="div">
-                    Network Tests: 230
+                  <Typography
+                    gutterBottom
+                    fontSize={24}
+                    fontWeight={300}
+                    component="div"
+                  >
+                    Network Tests:{" "}
+                    <span style={{ fontWeight: 700 }}>
+                      {dashoardData.computers}
+                    </span>
                   </Typography>
                   <Typography variant="body2" sx={{ color: "text.secondary" }}>
-                    These are the total number of network tests carried out in
-                    your centre
+                    This is the summary of network tests conducted in your
+                    centre
                   </Typography>
                 </CardContent>
-                <CardActions>
-                  <Button size="small">Share</Button>
-                  <Button size="small">Learn More</Button>
+                <CardActions className="mb-5">
+                  <Nav.Link
+                    as={Link}
+                    to="/admin/infractions"
+                    className="infraction-link"
+                  >
+                    <p className="text-muted ps-2">
+                      VIEW NETWORK TESTS <ArrowRight />
+                    </p>
+                  </Nav.Link>
                 </CardActions>
               </Card>
             </div>
@@ -146,22 +179,35 @@ function AdminHomePage() {
                   title="green iguana"
                 />
                 <CardContent>
-                  <Typography gutterBottom variant="h5" component="div">
-                    Infractions: {dashoardData.infractions}
+                  <Typography
+                    gutterBottom
+                    fontSize={24}
+                    fontWeight={300}
+                    component="div"
+                  >
+                    Infractions:{" "}
+                    <span style={{ fontWeight: 700 }}>
+                      {dashoardData.infractions}
+                    </span>
                   </Typography>
                   <Typography variant="body2" sx={{ color: "text.secondary" }}>
-                    This is the number of infractions your centre has committed
-                    in terms of violating our ethics in facility management
+                    This is the number of infraction cases recorded against your
+                    centre
                   </Typography>
                 </CardContent>
-                <CardActions>
-                  <Button size="small">Share</Button>
-                  <Button size="small">Learn More</Button>
+                <CardActions className="mb-5">
+                  <Nav.Link
+                    as={Link}
+                    to="/admin/infractions"
+                    className="infraction-link"
+                  >
+                    <p className="text-muted ps-2">
+                      VIEW INFRACTIONS <ArrowRight />
+                    </p>
+                  </Nav.Link>
                 </CardActions>
               </Card>
             </div>
-            <div className="col-lg-4"></div>
-            <div className="col-lg-4"></div>
           </div>
         )}
       </div>

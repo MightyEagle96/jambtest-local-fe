@@ -73,3 +73,24 @@
 .bounce-fade {
   animation: bounceFade 2.5s ease-in-out infinite;
 }
+
+.infraction-link {
+  text-decoration: none; /* Remove default underline */
+  position: relative; /* Required for positioning the ::after element */
+  display: inline-block; /* Ensures the link wraps tightly around content */
+}
+
+.infraction-link::after {
+  content: ""; /* Empty content for the pseudo-element */
+  position: absolute;
+  left: 0;
+  bottom: -2px; /* Adjust to position the underline below the text */
+  width: 0; /* Start with no width */
+  height: 2px; /* Thickness of the underline */
+  background-color: #315071; /* Bootstrap primary blue, or choose your color */
+  transition: width 0.3s ease-in-out; /* Smooth transition for width */
+}
+
+.infraction-link:hover::after {
+  width: 100%; /* Expand to full width on hover */
+}
