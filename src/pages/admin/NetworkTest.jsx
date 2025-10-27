@@ -110,6 +110,19 @@ function NetworkTest() {
       ),
     },
     {
+      field: "ended",
+      headerName: "Ended",
+      width: 200,
+      renderCell: (params) =>
+        params.value ? <Done color="success" /> : <Clear color="error" />,
+    },
+    {
+      field: "timeEnded",
+      headerName: "Time Ended",
+      width: 200,
+      renderCell: (params) => params.value,
+    },
+    {
       field: "delete",
       headerName: "Delete",
       width: 200,
@@ -199,7 +212,7 @@ function NetworkTest() {
                 Network Test
               </Typography>
               <Typography variant="body2" color="GrayText">
-                Conduct a network test.
+                Conduct a network test for all computers within your facility.
               </Typography>
             </div>
             <div>

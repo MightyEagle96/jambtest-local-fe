@@ -6,23 +6,27 @@ import format from "format-duration";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { appHttpService } from "../httpServices/appHttpService";
 function CountDownTimer() {
+  const networkTestDetail = useSelector(
+    (state) => state.networkTestDetailSlice
+  );
   const [question, setQuestion] = useState({
     question: "Network Test has begun",
-    options: [],
+    options: [
+      "Ensure connectivity",
+      "Ensure security",
+      "Ensure speed",
+      "Other",
+    ],
     responses: 0,
     maxResponses: 0,
   });
   const duration = useSelector((state) => state.durationSlice);
   const network = useSelector((state) => state.networkSlice);
-  const [loading, setLoading] = useState(false);
+
   const [timeLeft, setTimeLeft] = useState(0);
   const [searchParams] = useSearchParams();
   const networktest = searchParams.get("networktest");
   const computer = searchParams.get("computer");
-
-  const networkTestDetail = useSelector(
-    (state) => state.networkTestDetailSlice
-  );
 
   const navigate = useNavigate();
   const sendResponses = async () => {
@@ -55,7 +59,6 @@ function CountDownTimer() {
     );
 
     if (data) {
-      console.log(data);
       setQuestion(data);
     }
   };
@@ -75,24 +78,30 @@ function CountDownTimer() {
       <div className="d-flex justify-content-between align-items-center">
         <div className="col-lg-10">
           {networkTestDetail && (
-            <div className="c alert alert-light border-0">
+            <div className="c alert alert-danger border-0">
               <div className="d-flex justify-content-between">
                 <div className="">
                   <Typography variant="caption">Network Test ID:</Typography>
-                  <Typography fontWeight={700} textTransform={"uppercase"}>
+                  <Typography
+                    variant="h5"
+                    fontWeight={700}
+                    textTransform={"uppercase"}
+                  >
                     {networkTestDetail.examId}
                   </Typography>
                 </div>
 
                 <div>
                   <Typography variant="caption">Duration:</Typography>
-                  <Typography fontWeight={700}>
+                  <Typography variant="h5" fontWeight={700}>
                     {networkTestDetail.duration / 1000 / 60} mins
                   </Typography>
                 </div>
                 <div>
                   <Typography variant="caption">Time Left:</Typography>
-                  <Typography fontWeight={700}>{format(timeLeft)}</Typography>
+                  <Typography variant="h5" fontWeight={700}>
+                    {format(timeLeft)}
+                  </Typography>
                 </div>
               </div>
             </div>
@@ -129,25 +138,27 @@ function CountDownTimer() {
           <Typography variant="caption">Options</Typography>
 
           {question?.options.map((option, index) => (
-            <Typography fontSize={18} key={index} gutterBottom>
+            <Typography fontSize={18} key={index} className="mb-4">
               {index + 1}. {option}
             </Typography>
           ))}
         </div>
       </div>
-      <div className="text-center mt-5">
-        <div>
-          <Typography fontWeight={700} color="#456882">
-            {question.responses}/{question.maxResponses} questions answered
-          </Typography>
+      {question.maxResponses !== 0 && (
+        <div className="text-center mt-5">
+          <div>
+            <Typography fontWeight={700} color="#456882">
+              {question.responses}/{question.maxResponses} questions answered
+            </Typography>
+          </div>
+          <div className="mt-5">
+            <LinearProgress
+              variant="determinate"
+              value={(question.responses / question.maxResponses) * 100}
+            />
+          </div>
         </div>
-        <div className="mt-5">
-          <LinearProgress
-            variant="determinate"
-            value={(question.responses / question.maxResponses) * 100}
-          />
-        </div>
-      </div>
+      )}
     </div>
   );
 }
