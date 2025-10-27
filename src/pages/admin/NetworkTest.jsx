@@ -60,7 +60,7 @@ function NetworkTest() {
     },
     {
       field: "examId",
-      headerName: "Exam ID",
+      headerName: "Network Test ID",
       width: 400,
       renderCell: (params) => (
         <Nav.Link as={Link} to={`/admin/networktest/${params.row._id}`}>
