@@ -75,89 +75,110 @@ function CountDownTimer() {
   };
   return (
     <div className="container">
-      <div className="d-flex justify-content-between align-items-center">
-        <div className="col-lg-10">
-          {networkTestDetail && (
-            <div className="c alert alert-danger border-0">
-              <div className="d-flex justify-content-between">
-                <div className="">
-                  <Typography variant="caption">Network Test ID:</Typography>
-                  <Typography
-                    variant="h5"
-                    fontWeight={700}
-                    textTransform={"uppercase"}
-                  >
-                    {networkTestDetail.examId}
-                  </Typography>
-                </div>
+      {networkTestDetail && (
+        <>
+          <div className="d-flex justify-content-between align-items-center">
+            <div className="col-lg-10">
+              <div className="c alert alert-danger border-0">
+                <div className="d-flex justify-content-between">
+                  <div className="">
+                    <Typography variant="caption">Network Test ID:</Typography>
+                    <Typography
+                      variant="h5"
+                      fontWeight={700}
+                      textTransform={"uppercase"}
+                    >
+                      {networkTestDetail.examId}
+                    </Typography>
+                  </div>
 
-                <div>
-                  <Typography variant="caption">Duration:</Typography>
-                  <Typography variant="h5" fontWeight={700}>
-                    {networkTestDetail.duration / 1000 / 60} mins
-                  </Typography>
-                </div>
-                <div>
-                  <Typography variant="caption">Time Left:</Typography>
-                  <Typography variant="h5" fontWeight={700}>
-                    {format(timeLeft)}
-                  </Typography>
+                  <div>
+                    <Typography variant="caption">Duration:</Typography>
+                    <Typography variant="h5" fontWeight={700}>
+                      {networkTestDetail.duration / 1000 / 60} mins
+                    </Typography>
+                  </div>
+                  <div>
+                    <Typography variant="caption">Time Left:</Typography>
+                    <Typography variant="h5" fontWeight={700}>
+                      {format(timeLeft)}
+                    </Typography>
+                  </div>
                 </div>
               </div>
             </div>
+          </div>
+
+          <div className="d-none">
+            <CountdownCircleTimer
+              isPlaying={network}
+              duration={duration / 1000}
+              colors={["#004777", "#F7B801", "#A30000", "#A30000"]}
+              colorsTime={[7, 5, 2, 0]}
+              onUpdate={(e) => {
+                if (e % 60 === 0) {
+                  if (timeLeft !== 0) sendResponses();
+                }
+                setTimeLeft(e * 1000);
+              }}
+              onComplete={() => {
+                endNetworkTest();
+              }}
+            >
+              {({ remainingTime }) => remainingTime}
+            </CountdownCircleTimer>
+          </div>
+
+          <div className="mt-3 rounded p-3 rounded bg-light">
+            <div className="mb-3">
+              <Typography variant="caption">Question</Typography>
+              <Typography fontSize={22}>{question?.question}</Typography>
+            </div>
+            <div className="mb-3">
+              <Typography variant="caption">Options</Typography>
+
+              {question?.options.map((option, index) => (
+                <Typography fontSize={18} key={index} className="mb-4">
+                  {index + 1}. {option}
+                </Typography>
+              ))}
+            </div>
+          </div>
+          {question.maxResponses !== 0 ? (
+            <div className="text-center mt-5">
+              <div>
+                <Typography fontWeight={700} color="#456882">
+                  {question.responses}/{question.maxResponses} questions
+                  answered
+                </Typography>
+              </div>
+              <div className="mt-5">
+                <LinearProgress
+                  variant="determinate"
+                  value={(question.responses / question.maxResponses) * 100}
+                />
+              </div>
+            </div>
+          ) : (
+            <div className="text-center mt-5">
+              <div>
+                <Typography fontWeight={700} color="#456882">
+                  {question.responses}/{networkTestDetail.duration / 1000 / 60}{" "}
+                  questions answered
+                </Typography>
+              </div>
+              <div className="mt-5">
+                <LinearProgress
+                  variant="determinate"
+                  value={
+                    question.responses /
+                    ((networkTestDetail.duration / 1000 / 60) * 100)
+                  }
+                />
+              </div>
+            </div>
           )}
-        </div>
-      </div>
-
-      <div className="d-none">
-        <CountdownCircleTimer
-          isPlaying={network}
-          duration={duration / 1000}
-          colors={["#004777", "#F7B801", "#A30000", "#A30000"]}
-          colorsTime={[7, 5, 2, 0]}
-          onUpdate={(e) => {
-            if (e % 60 === 0) {
-              if (timeLeft !== 0) sendResponses();
-            }
-            setTimeLeft(e * 1000);
-          }}
-          onComplete={() => {
-            endNetworkTest();
-          }}
-        >
-          {({ remainingTime }) => remainingTime}
-        </CountdownCircleTimer>
-      </div>
-
-      <div className="mt-3 rounded p-3 rounded bg-light">
-        <div className="mb-3">
-          <Typography variant="caption">Question</Typography>
-          <Typography fontSize={22}>{question?.question}</Typography>
-        </div>
-        <div className="mb-3">
-          <Typography variant="caption">Options</Typography>
-
-          {question?.options.map((option, index) => (
-            <Typography fontSize={18} key={index} className="mb-4">
-              {index + 1}. {option}
-            </Typography>
-          ))}
-        </div>
-      </div>
-      {question.maxResponses !== 0 && (
-        <div className="text-center mt-5">
-          <div>
-            <Typography fontWeight={700} color="#456882">
-              {question.responses}/{question.maxResponses} questions answered
-            </Typography>
-          </div>
-          <div className="mt-5">
-            <LinearProgress
-              variant="determinate"
-              value={(question.responses / question.maxResponses) * 100}
-            />
-          </div>
-        </div>
+        </>
       )}
     </div>
   );

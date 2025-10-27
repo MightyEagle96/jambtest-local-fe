@@ -63,8 +63,14 @@ function NetworkTest() {
       headerName: "Exam ID",
       width: 400,
       renderCell: (params) => (
-        <span className="fw-bold text-uppercase">{params.value}</span>
+        <Nav.Link as={Link} to={`/admin/networktest/${params.row._id}`}>
+          <p className="text-uppercase fw-bold text-success">{params.value}</p>
+        </Nav.Link>
       ),
+      // renderCell: (params) => (
+
+      //  // <span className="fw-bold text-uppercase">{params.value}</span>
+      // ),
     },
     {
       field: "duration",
@@ -78,20 +84,6 @@ function NetworkTest() {
       width: 200,
     },
 
-    {
-      field: "_id",
-      headerName: "View",
-      width: 200,
-      renderCell: (params) => (
-        <Nav.Link
-          className="text-danger"
-          as={Link}
-          to={`/admin/networktest/${params.value}`}
-        >
-          <p>view</p>
-        </Nav.Link>
-      ),
-    },
     {
       field: "active",
       headerName: "Active",
