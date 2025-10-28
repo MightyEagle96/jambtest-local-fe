@@ -77,34 +77,30 @@ function CountDownTimer() {
     <div className="container">
       {networkTestDetail && (
         <>
-          <div className="d-flex justify-content-between align-items-center">
-            <div className="col-lg-10">
-              <div className="c alert alert-success border-0">
-                <div className="d-flex justify-content-between">
-                  <div className="">
-                    <Typography variant="caption">Network Test ID:</Typography>
-                    <Typography
-                      variant="h5"
-                      fontWeight={700}
-                      textTransform={"uppercase"}
-                    >
-                      {networkTestDetail.examId}
-                    </Typography>
-                  </div>
+          <div className="alert alert-success border-0">
+            <div className="d-flex justify-content-between">
+              <div className="">
+                <Typography variant="caption">Network Test ID:</Typography>
+                <Typography
+                  variant="h5"
+                  fontWeight={700}
+                  textTransform={"uppercase"}
+                >
+                  {networkTestDetail.examId}
+                </Typography>
+              </div>
 
-                  <div>
-                    <Typography variant="caption">Duration:</Typography>
-                    <Typography variant="h5" fontWeight={700}>
-                      {networkTestDetail.duration / 1000 / 60} mins
-                    </Typography>
-                  </div>
-                  <div>
-                    <Typography variant="caption">Time Left:</Typography>
-                    <Typography variant="h5" fontWeight={700}>
-                      {format(timeLeft)}
-                    </Typography>
-                  </div>
-                </div>
+              <div>
+                <Typography variant="caption">Duration:</Typography>
+                <Typography variant="h5" fontWeight={700}>
+                  {networkTestDetail.duration / 1000 / 60} mins
+                </Typography>
+              </div>
+              <div>
+                <Typography variant="caption">Time Left:</Typography>
+                <Typography variant="h5" fontWeight={700}>
+                  {format(timeLeft)}
+                </Typography>
               </div>
             </div>
           </div>
