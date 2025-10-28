@@ -307,7 +307,8 @@ function RegisterComputers() {
               rowCount={total}
               paginationModel={paginationModel}
               onPaginationModelChange={setPaginationModel}
-              pageSizeOptions={[50, 100, 200]}
+              paginationMode="server"
+              pageSizeOptions={[50, 100]}
             />
           </div>
         </div>

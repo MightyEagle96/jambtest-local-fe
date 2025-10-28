@@ -139,7 +139,7 @@ function NetworkTestPage() {
     return () => {
       clearInterval(interval);
     };
-  }, []);
+  }, [paginationModel]);
 
   const endNetworkTest = () => {
     Swal.fire({
@@ -290,6 +290,7 @@ function NetworkTestPage() {
                 columns={columns}
                 loading={loading}
                 rowCount={total}
+                paginationMode="server"
                 paginationModel={paginationModel}
                 onPaginationModelChange={setPaginationModel}
                 pageSizeOptions={[50, 100]}
