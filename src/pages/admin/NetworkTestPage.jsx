@@ -12,11 +12,15 @@ import { toast } from "react-toastify";
 function NetworkTestPage() {
   const { id } = useParams();
   const [test, setTest] = useState(null);
-
+  const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(false);
   const [computerList, setComputerList] = useState([]);
   const [computer, setComputer] = useState(null);
   const [dashboard, setDashoard] = useState(null);
+  const [paginationModel, setPaginationModel] = useState({
+    page: 0, // DataGrid uses 0-based index
+    pageSize: 50, // rows per page
+  });
 
   const navigate = useNavigate();
   const getData = async () => {
@@ -24,7 +28,12 @@ function NetworkTestPage() {
     const [testData, getComputerList, testDashboard] = await Promise.all([
       appHttpService(`networktest/view/${id}`),
 
-      appHttpService("networktest/computerlist/" + id),
+      appHttpService("networktest/computerlist/" + id, {
+        params: {
+          page: paginationModel.page + 1,
+          limit: paginationModel.pageSize,
+        },
+      }),
 
       appHttpService("networktest/dashboard", {
         params: {
@@ -41,7 +50,8 @@ function NetworkTestPage() {
 
     if (getComputerList) {
       if (getComputerList.data) {
-        setComputerList(getComputerList.data);
+        setComputerList(getComputerList.data.computers);
+        setTotal(getComputerList.data.total);
       }
     }
 
@@ -279,6 +289,10 @@ function NetworkTestPage() {
                 rows={computerList}
                 columns={columns}
                 loading={loading}
+                rowCount={total}
+                paginationModel={paginationModel}
+                onPaginationModelChange={setPaginationModel}
+                pageSizeOptions={[50, 100]}
               />
             </div>
           </>
