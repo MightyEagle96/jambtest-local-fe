@@ -20,7 +20,7 @@ function NavbarComponent() {
     try {
       const { data } = await appHttpService("auth/logout");
       if (data) {
-        window.location.href = "/";
+        window.location.href = "/admin";
       }
     } finally {
       setLoading(false);
