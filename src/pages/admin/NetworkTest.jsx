@@ -12,6 +12,7 @@ function NetworkTest() {
   const [show, setShow] = useState(false);
   const [duration, setDuration] = useState(0);
   const [rows, setRows] = useState([]);
+  const [loading, setLoading] = useState(false);
   const handleClose = () => setShow(false);
 
   const createNetworkTest = () => {
@@ -44,12 +45,15 @@ function NetworkTest() {
   };
 
   const getNetworkTests = async () => {
+    setLoading(true);
     const { data } = await appHttpService("networktest/view");
 
     if (data) {
       setRows(data);
       console.log(data);
     }
+
+    setLoading(false);
   };
 
   const columns = [
@@ -111,6 +115,7 @@ function NetworkTest() {
       width: 200,
       renderCell: (params) => (
         <Button
+          disabled={params.row.ended}
           sx={{ textTransform: "capitalize" }}
           onClick={() => toggleactivation(params.row._id, params.row.active)}
         >
@@ -123,8 +128,8 @@ function NetworkTest() {
       headerName: "Upload",
       width: 150,
       renderCell: (params) => (
-        <IconButton>
-          <Upload color="success" />
+        <IconButton disabled={!params.row.ended}>
+          <Upload color={!params.row.ended ? "disabled" : "success"} />
         </IconButton>
       ),
     },
@@ -132,11 +137,14 @@ function NetworkTest() {
       field: "delete",
       headerName: "Delete",
       width: 150,
-      renderCell: (params) => (
-        <IconButton onClick={() => deleteExamination(params.row._id)}>
-          <Delete color="error" />
-        </IconButton>
-      ),
+      renderCell: (params) =>
+        !params.row.timeUploaded ? (
+          <IconButton onClick={() => deleteExamination(params.row._id)}>
+            <Delete color="error" />
+          </IconButton>
+        ) : (
+          <Typography variant="overline">Uploaded</Typography>
+        ),
     },
   ];
   useEffect(() => {
@@ -229,7 +237,7 @@ function NetworkTest() {
           </div>
         </div>
         <div className="p-3">
-          <DataGrid columns={columns} rows={rows} />
+          <DataGrid columns={columns} rows={rows} loading={loading} />
         </div>
       </div>
       <Modal onHide={handleClose} centered show={show}>

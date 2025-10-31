@@ -145,6 +145,7 @@ function NetworkTestPage() {
     Swal.fire({
       icon: "question",
       title: "End Network Test",
+      text: "Are you sure you want to end this test? You will not be able to activate it after it has been ended.",
       showDenyButton: true,
       confirmButtonText: "Yes",
     }).then(async (result) => {
