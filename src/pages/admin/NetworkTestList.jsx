@@ -5,13 +5,14 @@ import Swal from "sweetalert2";
 import { appHttpService } from "../../httpServices/appHttpService";
 import { toast } from "react-toastify";
 import { DataGrid } from "@mui/x-data-grid";
-import { Done, Clear, Delete, Upload } from "@mui/icons-material";
+import { Done, Clear, Delete, Upload, Save } from "@mui/icons-material";
 import { Link } from "react-router-dom";
 
 function NetworkTest() {
   const [show, setShow] = useState(false);
   const [duration, setDuration] = useState(0);
   const [rows, setRows] = useState([]);
+  const [rowCount, setRowCount] = useState(0);
   const [loading, setLoading] = useState(false);
   const handleClose = () => setShow(false);
 
@@ -24,6 +25,7 @@ function NetworkTest() {
       confirmButtonText: "Yes",
     }).then(async (result) => {
       if (result.isConfirmed) {
+        setLoading(true);
         const { data, error } = await appHttpService.post(
           "networktest/create",
           {
@@ -40,6 +42,7 @@ function NetworkTest() {
         if (error) {
           toast.error(error);
         }
+        setLoading(false);
       }
     });
   };
@@ -49,7 +52,8 @@ function NetworkTest() {
     const { data } = await appHttpService("networktest/view");
 
     if (data) {
-      setRows(data);
+      setRows(data.networkTests);
+      setRowCount(data.total);
       console.log(data);
     }
 
@@ -71,10 +75,6 @@ function NetworkTest() {
           <p className="text-uppercase fw-bold text-success">{params.value}</p>
         </Nav.Link>
       ),
-      // renderCell: (params) => (
-
-      //  // <span className="fw-bold text-uppercase">{params.value}</span>
-      // ),
     },
     {
       field: "duration",
@@ -217,7 +217,7 @@ function NetworkTest() {
       <div className="mt-5">
         <div className="container mb-4">
           <div className="d-flex justify-content-between">
-            <div>
+            <div className="col-lg-3">
               <Typography
                 gutterBottom
                 color="#37353E"
@@ -230,7 +230,20 @@ function NetworkTest() {
                 Conduct a network test for all computers within your facility.
               </Typography>
             </div>
-            <div>
+            <div className="col-lg-3">
+              <Typography
+                gutterBottom
+                color="#37353E"
+                variant="h4"
+                fontWeight={700}
+              >
+                {rowCount}
+              </Typography>
+              <Typography variant="body2" color="GrayText">
+                Network tests created
+              </Typography>
+            </div>
+            <div className="col-lg-3">
               <Button onClick={() => setShow(true)} variant="contained">
                 Create new network test
               </Button>
@@ -261,7 +274,13 @@ function NetworkTest() {
           </div>
         </Modal.Body>
         <Modal.Footer className="border-0 bg-light">
-          <Button onClick={createNetworkTest} variant="contained">
+          <Button
+            endIcon={<Save />}
+            loading={loading}
+            loadingPosition="end"
+            onClick={createNetworkTest}
+            variant="contained"
+          >
             Save
           </Button>
         </Modal.Footer>
