@@ -7,6 +7,8 @@ import { toast } from "react-toastify";
 import { DataGrid } from "@mui/x-data-grid";
 import { Done, Clear, Delete, Upload, Save } from "@mui/icons-material";
 import { Link } from "react-router-dom";
+import { setRefresh } from "../../redux/refreshSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 function NetworkTest() {
   const [show, setShow] = useState(false);
@@ -14,6 +16,13 @@ function NetworkTest() {
   const [rows, setRows] = useState([]);
   const [rowCount, setRowCount] = useState(0);
   const [loading, setLoading] = useState(false);
+
+  const refreshSlice = useSelector((state) => state.refreshSlice);
+
+  const [paginationModel, setPaginationModel] = useState({
+    page: 0, // DataGrid uses 0-based index
+    pageSize: 50, // rows per page
+  });
   const handleClose = () => setShow(false);
 
   const createNetworkTest = () => {
@@ -49,7 +58,12 @@ function NetworkTest() {
 
   const getNetworkTests = async () => {
     setLoading(true);
-    const { data } = await appHttpService("networktest/view");
+    const { data } = await appHttpService("networktest/view", {
+      params: {
+        page: paginationModel.page + 1,
+        limit: paginationModel.pageSize,
+      },
+    });
 
     if (data) {
       setRows(data.networkTests);
@@ -129,9 +143,13 @@ function NetworkTest() {
       headerName: "Upload",
       width: 150,
       renderCell: (params) => (
-        <IconButton disabled={!params.row.ended}>
-          <Upload color={!params.row.ended ? "disabled" : "success"} />
-        </IconButton>
+        <UploadTest params={params} />
+        // <IconButton
+        //   disabled={!params.row.ended}
+        //   onClick={() => uploadTest(params.row._id)}
+        // >
+        //   <Upload color={!params.row.ended ? "disabled" : "success"} />
+        // </IconButton>
       ),
     },
     {
@@ -150,7 +168,7 @@ function NetworkTest() {
   ];
   useEffect(() => {
     getNetworkTests();
-  }, []);
+  }, [refreshSlice, paginationModel]);
 
   const deleteExamination = (id) => {
     Swal.fire({
@@ -212,6 +230,7 @@ function NetworkTest() {
         }
       }
     });
+
   return (
     <div>
       <div className="mt-5">
@@ -251,7 +270,15 @@ function NetworkTest() {
           </div>
         </div>
         <div className="p-3">
-          <DataGrid columns={columns} rows={rows} loading={loading} />
+          <DataGrid
+            columns={columns}
+            rows={rows}
+            loading={loading}
+            paginationMode="server"
+            paginationModel={paginationModel}
+            onPaginationModelChange={setPaginationModel}
+            pageSizeOptions={[50, 100]}
+          />
         </div>
       </div>
       <Modal onHide={handleClose} centered show={show}>
@@ -290,3 +317,39 @@ function NetworkTest() {
 }
 
 export default NetworkTest;
+
+function UploadTest({ params }) {
+  const [loading, setLoading] = useState(false);
+
+  const dispatch = useDispatch();
+
+  const refreshSlice = useSelector((state) => state.refreshSlice);
+
+  const uploadTest = async () => {
+    setLoading(true);
+    const { data, error } = await appHttpService.get("networktest/upload", {
+      params: { id: params.row._id },
+    });
+
+    if (data) {
+      dispatch(setRefresh(!refreshSlice));
+      toast.success(data);
+    }
+
+    if (error) {
+      toast.error(error);
+    }
+    setLoading(false);
+  };
+  return (
+    <Button
+      endIcon={<Upload />}
+      loading={loading}
+      disabled={!params.row.ended}
+      loadingPosition="end"
+      onClick={uploadTest}
+    >
+      <Typography variant="caption">Upload</Typography>
+    </Button>
+  );
+}
