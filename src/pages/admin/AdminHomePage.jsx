@@ -150,7 +150,7 @@ function AdminHomePage() {
                   >
                     Network Tests:{" "}
                     <span style={{ fontWeight: 700 }}>
-                      {dashoardData.computers}
+                      {dashoardData.networkTests}
                     </span>
                   </Typography>
                   <Typography variant="body2" sx={{ color: "text.secondary" }}>

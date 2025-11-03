@@ -1,10 +1,10 @@
 import { Route, Routes } from "react-router-dom";
 import AdminHomePage from "../pages/admin/AdminHomePage";
 import InfractionReport from "../pages/admin/InfractionReport";
-import NetworkTest from "../pages/admin/NetworkTest";
+import NetworkTest from "../pages/admin/NetworkTestList";
 import RegisterComputers from "../pages/admin/RegisterComputers";
 import NavbarComponent from "../components/NavbarComponent";
-import NetworkTestPage from "../pages/admin/NetworkTestPage";
+import NetworkTestPage from "../pages/admin/ViewNetworkTest";
 
 function PrivateAdminRoutes() {
   const routes = [

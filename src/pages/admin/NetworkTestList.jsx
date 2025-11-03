@@ -80,6 +80,7 @@ function NetworkTest() {
       field: "duration",
       headerName: "Duration (mins)",
       width: 200,
+      renderCell: (params) => params.value / 1000 / 60,
     },
 
     {
@@ -161,7 +162,7 @@ function NetworkTest() {
     }).then(async (result) => {
       if (result.isConfirmed) {
         {
-          const { data, error } = await appHttpService.get(
+          const { data, error } = await appHttpService.delete(
             "networktest/delete",
             {
               params: {
