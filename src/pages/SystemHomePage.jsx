@@ -35,9 +35,17 @@ function SystemHomePage() {
   const [registering, setRegistering] = useState(false);
   const [error, setError] = useState("");
   const [errorIcon, setErrorIcon] = useState(null);
+  const [centreDetail, setCentreDetail] = useState(null);
 
   const navigate = useNavigate();
 
+  const getCentreDetail = async () => {
+    const { data } = await appHttpService.get("networktest/centredetail");
+    if (data) {
+      setCentreDetail(data);
+      console.log(data);
+    }
+  };
   const dispatch = useDispatch();
   const getSystemInfo = async () => {
     setLoading(true);
@@ -54,6 +62,7 @@ function SystemHomePage() {
   };
 
   useEffect(() => {
+    getCentreDetail();
     // Step 1: Fetch system info once
     getSystemInfo();
     beginNetworkTest();
@@ -64,6 +73,7 @@ function SystemHomePage() {
     if (!systemInfo) return;
     const interval = setInterval(() => {
       beginNetworkTest();
+      getCentreDetail();
     }, 10_000);
     return () => clearInterval(interval);
   }, [systemInfo]);
@@ -106,7 +116,6 @@ function SystemHomePage() {
         navigate(
           `/networktest?networktest=${data.networkTest}&computer=${data.computer}`
         );
-        console.log(data);
       }
 
       if (error) {
@@ -135,14 +144,27 @@ function SystemHomePage() {
 
   return (
     <div>
-      <div className="mt-5 text-center">
-        <img src={logo} className="mb-0" alt="logo" height={100} />
+      <div className="row m-0 mt-5 d-flex align-items-center">
+        <div className="col-lg-4"></div>
+        <div className="col-lg-4 text-center">
+          <div className="">
+            <img src={logo} className="mb-0" alt="logo" height={100} />
 
-        <h4 style={{ fontWeight: 700 }}>JAMB TEST 2.0</h4>
-        <h6 style={{ fontWeight: "lighter" }}>
-          CLIENT CONSOLE{" "}
-          {loading && <CircularProgress size={15} color="GrayText" />}
-        </h6>
+            <h4 style={{ fontWeight: 700 }}>JAMB TEST 2.0</h4>
+            <h6 style={{ fontWeight: "lighter" }}>
+              {loading && <CircularProgress size={15} color="GrayText" />}
+            </h6>
+          </div>
+        </div>
+        <div className="col-lg-4">
+          {centreDetail && (
+            <div className="alert alert-success border-0">
+              <Typography textTransform={"uppercase"}>
+                {centreDetail.CentreName}
+              </Typography>
+            </div>
+          )}
+        </div>
       </div>
 
       <div className="mt-4">
