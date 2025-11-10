@@ -81,22 +81,59 @@ function CountDownTimer() {
     }
   };
 
+  // const networkPing = async () => {
+  //   setLoading(true);
+  //   const { data, error, status } = await appHttpService("networktest/ping");
+  //   if (data) {
+  //     dispatch(setNetwork(true));
+  //     // console.log(data);
+  //   }
+  //   if (!data || error) {
+  //     toast.error("Network connection lost");
+  //     dispatch(setNetwork(false));
+
+  //     const interval = setInterval(() => {
+  //       networkPing();
+  //     }, 10_000);
+
+  //     return () => clearInterval(interval);
+  //   }
+
+  //   if (status === 404) {
+  //     navigate("/");
+  //   }
+  //   setLoading(false);
+  // };
+
   const networkPing = async () => {
     setLoading(true);
-    const { data, error, status } = await appHttpService("networktest/ping");
-    if (data) {
-      dispatch(setNetwork(true));
-      // console.log(data);
-    }
-    if (!data || error) {
-      toast.error("Network connection lost");
-      dispatch(setNetwork(false));
-    }
 
-    if (status === 404) {
-      navigate("/");
+    try {
+      const { data, error, status } = await appHttpService("networktest/ping");
+
+      if (status === 404) {
+        navigate("/");
+        return;
+      }
+
+      if (data && !error) {
+        dispatch(setNetwork(true));
+        setLoading(false);
+        return; // ✅ success, stop retrying
+      }
+
+      // ❌ error case below
+      throw new Error("Network down");
+    } catch (err) {
+      //toast.error("Network connection lost");
+      dispatch(setNetwork(false));
+      setLoading(false);
+
+      // 🔁 retry after 10 seconds
+      setTimeout(() => {
+        networkPing();
+      }, 10_000);
     }
-    setLoading(false);
   };
   return (
     <div className="container">
