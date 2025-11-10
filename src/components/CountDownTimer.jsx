@@ -83,7 +83,7 @@ function CountDownTimer() {
 
   const networkPing = async () => {
     setLoading(true);
-    const { data, error } = await appHttpService("networktest/ping");
+    const { data, error, status } = await appHttpService("networktest/ping");
     if (data) {
       dispatch(setNetwork(true));
       // console.log(data);
@@ -91,6 +91,10 @@ function CountDownTimer() {
     if (!data || error) {
       toast.error("Network connection lost");
       dispatch(setNetwork(false));
+    }
+
+    if (status === 404) {
+      navigate("/");
     }
     setLoading(false);
   };
