@@ -1,4 +1,11 @@
-import { Button, IconButton, TextField, Typography } from "@mui/material";
+import {
+  Alert,
+  AlertTitle,
+  Button,
+  IconButton,
+  TextField,
+  Typography,
+} from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { Modal, Nav } from "react-bootstrap";
 import Swal from "sweetalert2";
@@ -10,6 +17,12 @@ import { Link } from "react-router-dom";
 import { setRefresh } from "../../redux/refreshSlice";
 import { useDispatch, useSelector } from "react-redux";
 
+const thingsToNote = [
+  "The test duration must not be less than 60 minutes",
+  "You must attain your centre's capacity, with the number of connected computers",
+  "Network losses count must be below 45",
+  "Response throughput must not be less than 90%",
+];
 function NetworkTest() {
   const [show, setShow] = useState(false);
   const [duration, setDuration] = useState(0);
@@ -277,18 +290,32 @@ function NetworkTest() {
         <Modal.Header className="border-0" closeButton></Modal.Header>
         <Modal.Body>
           <div>
-            <div className="text-center mb-4">
-              <Typography variant="h5" fontWeight={700}>
-                NETWORK TEST DURATION
-              </Typography>
+            <div className="mb-4">
+              <div className="text-center mb-4">
+                <Typography variant="h5" fontWeight={700}>
+                  NETWORK TEST DURATION
+                </Typography>
+              </div>
+              <div>
+                <TextField
+                  fullWidth
+                  label="Duration in minutes"
+                  type="number"
+                  onChange={(e) => setDuration(e.target.value)}
+                />
+              </div>
             </div>
-            <div>
-              <TextField
-                fullWidth
-                label="Duration in minutes"
-                type="number"
-                onChange={(e) => setDuration(e.target.value)}
-              />
+            <div className="mb-4">
+              <Alert severity="info">
+                <AlertTitle>
+                  Before you can be be able to upload a network test result
+                </AlertTitle>
+                <ol className="pl-4">
+                  {thingsToNote.map((note, index) => (
+                    <li key={index}>{note}</li>
+                  ))}
+                </ol>
+              </Alert>
             </div>
           </div>
         </Modal.Body>
@@ -300,7 +327,7 @@ function NetworkTest() {
             onClick={createNetworkTest}
             variant="contained"
           >
-            Save
+            create new test
           </Button>
         </Modal.Footer>
       </Modal>
