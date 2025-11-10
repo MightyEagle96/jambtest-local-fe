@@ -1,11 +1,16 @@
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { CountdownCircleTimer } from "react-countdown-circle-timer";
-import { LinearProgress, Typography } from "@mui/material";
+import { Avatar, Button, LinearProgress, Typography } from "@mui/material";
 import format from "format-duration";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { appHttpService } from "../httpServices/appHttpService";
+import { setNetwork } from "../redux/networkSlice";
+import { Modal } from "react-bootstrap";
+import { Refresh, WifiOff } from "@mui/icons-material";
+import { toast } from "react-toastify";
 function CountDownTimer() {
+  const [loading, setLoading] = useState(false);
   const networkTestDetail = useSelector(
     (state) => state.networkTestDetailSlice
   );
@@ -29,6 +34,8 @@ function CountDownTimer() {
   const computer = searchParams.get("computer");
 
   const navigate = useNavigate();
+
+  const dispatch = useDispatch();
   const sendResponses = async () => {
     const { data, status } = await appHttpService.post(
       "networktest/sendresponses",
@@ -73,6 +80,20 @@ function CountDownTimer() {
       // console.log(data);
     }
   };
+
+  const networkPing = async () => {
+    setLoading(true);
+    const { data, error } = await appHttpService("networktest/ping");
+    if (data) {
+      dispatch(setNetwork(true));
+      // console.log(data);
+    }
+    if (!data || error) {
+      toast.error("Network connection lost");
+      dispatch(setNetwork(false));
+    }
+    setLoading(false);
+  };
   return (
     <div className="container">
       {networkTestDetail && (
@@ -112,6 +133,9 @@ function CountDownTimer() {
               colors={["#004777", "#F7B801", "#A30000", "#A30000"]}
               colorsTime={[7, 5, 2, 0]}
               onUpdate={(e) => {
+                if (e % 10 === 0 && timeLeft !== 0) {
+                  networkPing();
+                }
                 if (e % 60 === 0) {
                   if (timeLeft !== 0) sendResponses();
                 }
@@ -176,6 +200,45 @@ function CountDownTimer() {
           )}
         </>
       )}
+      <Modal
+        size="xl"
+        centered
+        show={!network}
+        backdrop="static"
+        onHide={() => networkPing()}
+      >
+        <Modal.Header className="border-0" closeButton>
+          <Modal.Title></Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div>
+            <div className="d-flex justify-content-center">
+              <Avatar
+                sx={{ height: 100, width: 100, backgroundColor: "#EE6983" }}
+              >
+                <WifiOff sx={{ width: 70, height: 70 }} />
+              </Avatar>
+            </div>
+            <div className="text-center mt-3">
+              <Typography color="GrayText" variant="h6" fontWeight={700}>
+                NETWORK CONNECTION LOST
+              </Typography>
+            </div>
+            <div className="mb-4 text-center mt-3 ">
+              <Button
+                loading={loading}
+                endIcon={<Refresh />}
+                loadingPosition="end"
+                onClick={() => networkPing()}
+              >
+                {" "}
+                Retry Connection
+              </Button>
+            </div>
+          </div>
+        </Modal.Body>
+        <Modal.Footer className="border-0"></Modal.Footer>
+      </Modal>
     </div>
   );
 }

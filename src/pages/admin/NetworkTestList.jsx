@@ -68,7 +68,6 @@ function NetworkTest() {
     if (data) {
       setRows(data.networkTests);
       setRowCount(data.total);
-      console.log(data);
     }
 
     setLoading(false);
@@ -142,15 +141,7 @@ function NetworkTest() {
       field: "upload",
       headerName: "Upload",
       width: 150,
-      renderCell: (params) => (
-        <UploadTest params={params} />
-        // <IconButton
-        //   disabled={!params.row.ended}
-        //   onClick={() => uploadTest(params.row._id)}
-        // >
-        //   <Upload color={!params.row.ended ? "disabled" : "success"} />
-        // </IconButton>
-      ),
+      renderCell: (params) => <UploadTest params={params} />,
     },
     {
       field: "delete",
@@ -278,6 +269,7 @@ function NetworkTest() {
             paginationModel={paginationModel}
             onPaginationModelChange={setPaginationModel}
             pageSizeOptions={[50, 100]}
+            rowCount={rowCount}
           />
         </div>
       </div>
