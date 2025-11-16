@@ -331,6 +331,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setDuration } from "../redux/durationSlice";
 import { setNetworkTestDetail } from "../redux/networkTestDetail";
+import { appVersion } from "../routes/appVersion";
 
 const errorMessages = {
   noCentre: "No centre found, contact administrator",
@@ -597,6 +598,9 @@ function SystemHomePage() {
             </div>
           </div>
         </div>
+      </div>
+      <div className="text-center">
+        <Typography variant="caption">Version {appVersion}</Typography>
       </div>
     </div>
   );
