@@ -12,7 +12,14 @@ import Swal from "sweetalert2";
 import { appHttpService } from "../../httpServices/appHttpService";
 import { toast } from "react-toastify";
 import { DataGrid } from "@mui/x-data-grid";
-import { Done, Clear, Delete, Upload, Save } from "@mui/icons-material";
+import {
+  Done,
+  Clear,
+  Delete,
+  Upload,
+  Save,
+  ArrowRight,
+} from "@mui/icons-material";
 import { Link } from "react-router-dom";
 import { setRefresh } from "../../redux/refreshSlice";
 import { useDispatch, useSelector } from "react-redux";
@@ -89,18 +96,40 @@ function NetworkTest() {
   const columns = [
     {
       field: "id",
-      headerName: "ID",
+      headerName: "S/N",
       width: 70,
     },
     {
       field: "examId",
-      headerName: "Network Test ID",
-      width: 400,
+      headerName: "Test",
+      width: 200,
       renderCell: (params) => (
         <Nav.Link as={Link} to={`/admin/networktest/${params.row._id}`}>
-          <p className="text-uppercase fw-bold text-success">{params.value}</p>
+          <p className=" text-success">
+            View Test <ArrowRight />
+          </p>
         </Nav.Link>
       ),
+    },
+    {
+      field: "activate",
+      headerName: "Activate/Deactivate",
+      width: 200,
+      renderCell: (params) => (
+        <Button
+          disabled={params.row.ended}
+          sx={{ textTransform: "capitalize" }}
+          onClick={() => toggleactivation(params.row._id, params.row.active)}
+        >
+          {params.row.active ? "Deactivate Test" : "Activate Test"}
+        </Button>
+      ),
+    },
+    {
+      field: "upload",
+      headerName: "Upload",
+      width: 150,
+      renderCell: (params) => <UploadTest params={params} />,
     },
     {
       field: "duration",
@@ -136,26 +165,7 @@ function NetworkTest() {
       renderCell: (params) =>
         params.value ? new Date(params.value).toLocaleString() : "-",
     },
-    {
-      field: "activate",
-      headerName: "Activate",
-      width: 200,
-      renderCell: (params) => (
-        <Button
-          disabled={params.row.ended}
-          sx={{ textTransform: "capitalize" }}
-          onClick={() => toggleactivation(params.row._id, params.row.active)}
-        >
-          {params.row.active ? "Deactivate" : "Activate"}
-        </Button>
-      ),
-    },
-    {
-      field: "upload",
-      headerName: "Upload",
-      width: 150,
-      renderCell: (params) => <UploadTest params={params} />,
-    },
+
     {
       field: "delete",
       headerName: "Delete",
