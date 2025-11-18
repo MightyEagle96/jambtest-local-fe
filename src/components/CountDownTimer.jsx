@@ -47,7 +47,7 @@ function CountDownTimer() {
     );
 
     if (status === 404) {
-      navigate("/");
+      window.location.assign("/");
       return;
     }
     if (data) {
@@ -76,34 +76,10 @@ function CountDownTimer() {
       computer,
     });
     if (data) {
-      navigate("/");
+      window.location.assign("/concluded");
       // console.log(data);
     }
   };
-
-  // const networkPing = async () => {
-  //   setLoading(true);
-  //   const { data, error, status } = await appHttpService("networktest/ping");
-  //   if (data) {
-  //     dispatch(setNetwork(true));
-  //     // console.log(data);
-  //   }
-  //   if (!data || error) {
-  //     toast.error("Network connection lost");
-  //     dispatch(setNetwork(false));
-
-  //     const interval = setInterval(() => {
-  //       networkPing();
-  //     }, 10_000);
-
-  //     return () => clearInterval(interval);
-  //   }
-
-  //   if (status === 404) {
-  //     navigate("/");
-  //   }
-  //   setLoading(false);
-  // };
 
   const networkPing = async () => {
     setLoading(true);
@@ -112,7 +88,7 @@ function CountDownTimer() {
       const { data, error, status } = await appHttpService("networktest/ping");
 
       if (status === 404) {
-        navigate("/");
+        window.location.assign("/");
         return;
       }
 
