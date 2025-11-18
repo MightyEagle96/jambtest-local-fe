@@ -19,10 +19,13 @@ import {
   Upload,
   Save,
   ArrowRight,
+  Close,
+  ArrowUpward,
 } from "@mui/icons-material";
 import { Link } from "react-router-dom";
 import { setRefresh } from "../../redux/refreshSlice";
 import { useDispatch, useSelector } from "react-redux";
+import { Table } from "react-bootstrap";
 
 const thingsToNote = [
   "The test duration must not be less than 60 minutes",
@@ -293,6 +296,7 @@ function NetworkTest() {
             onPaginationModelChange={setPaginationModel}
             pageSizeOptions={[50, 100]}
             rowCount={rowCount}
+            rowSelection={false}
           />
         </div>
       </div>
@@ -348,6 +352,7 @@ function NetworkTest() {
 export default NetworkTest;
 
 function UploadTest({ params }) {
+  const [summary, setSummary] = useState(null);
   const [loading, setLoading] = useState(false);
 
   const dispatch = useDispatch();
@@ -356,13 +361,18 @@ function UploadTest({ params }) {
 
   const uploadTest = async () => {
     setLoading(true);
-    const { data, error } = await appHttpService.get("networktest/upload", {
-      params: { id: params.row._id },
-    });
+    const { data, error } = await appHttpService.get(
+      "networktest/testsummary",
+      {
+        params: { id: params.row._id },
+      }
+    );
 
     if (data) {
-      dispatch(setRefresh(!refreshSlice));
-      toast.success(data);
+      setSummary(data);
+      console.log(data);
+      // dispatch(setRefresh(!refreshSlice));
+      // toast.success(data);
     }
 
     if (error) {
@@ -371,14 +381,111 @@ function UploadTest({ params }) {
     setLoading(false);
   };
   return (
-    <Button
-      endIcon={<Upload />}
-      loading={loading}
-      disabled={!params.row.ended}
-      loadingPosition="end"
-      onClick={uploadTest}
-    >
-      <Typography variant="caption">Upload</Typography>
-    </Button>
+    <>
+      <Button
+        endIcon={<Upload />}
+        loading={loading}
+        disabled={!params.row.ended}
+        loadingPosition="end"
+        onClick={uploadTest}
+      >
+        <Typography variant="caption">Upload</Typography>
+      </Button>
+      {summary && (
+        <Modal
+          size="lg"
+          show={summary}
+          centered
+          onHide={() => setSummary(null)}
+          backdrop="static"
+        >
+          <Modal.Header closeButton className="border-0">
+            <Modal.Title>Test Summary</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <Table striped borderless>
+              <thead>
+                <tr>
+                  <th>
+                    <Typography fontWeight={700}>Item</Typography>
+                  </th>
+                  <th>
+                    <Typography fontWeight={700}>Status</Typography>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <Typography variant="body2">
+                      Number of tested Computers matches centre's capacity
+                    </Typography>
+                  </td>
+                  <td>
+                    {summary.capacityMatched ? (
+                      <Done color="success" />
+                    ) : (
+                      <Close color="error" />
+                    )}
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <Typography variant="body2">
+                      Duration is equal to or greater than 60 minutes
+                    </Typography>
+                  </td>
+                  <td>
+                    {summary.durationMatched ? (
+                      <Done color="success" />
+                    ) : (
+                      <Close color="error" />
+                    )}
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <Typography variant="body2">
+                      Total network losses is less than 45
+                    </Typography>
+                  </td>
+                  <td>
+                    {summary.networkLossesThreshold ? (
+                      <Done color="success" />
+                    ) : (
+                      <Close color="error" />
+                    )}
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <Typography variant="body2">
+                      Response percentage is equal to or greater than 90%
+                    </Typography>
+                  </td>
+                  <td>
+                    {summary.responsesPercentageMatched ? (
+                      <Done color="success" />
+                    ) : (
+                      <Close color="error" />
+                    )}
+                  </td>
+                </tr>
+              </tbody>
+            </Table>
+          </Modal.Body>
+          <Modal.Footer className="border-0 bg-light">
+            <Button
+              startIcon={<ArrowUpward />}
+              disabled={!summary.canUpload}
+              variant="contained"
+            >
+              Upload Test
+            </Button>
+          </Modal.Footer>
+        </Modal>
+      )}
+    </>
   );
 }
