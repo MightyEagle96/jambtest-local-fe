@@ -132,7 +132,14 @@ function NetworkTest() {
       field: "upload",
       headerName: "Upload",
       width: 150,
-      renderCell: (params) => <UploadTest params={params} />,
+      renderCell: (params) =>
+        params.row.status === "uploaded" ? (
+          <Typography color="success" variant="overline">
+            Uploaded
+          </Typography>
+        ) : (
+          <UploadTest params={params} />
+        ),
     },
     {
       field: "duration",
@@ -168,6 +175,13 @@ function NetworkTest() {
       renderCell: (params) =>
         params.value ? new Date(params.value).toLocaleString() : "-",
     },
+    {
+      field: "timeUploaded",
+      headerName: "Time Uploaded",
+      width: 200,
+      renderCell: (params) =>
+        params.value ? new Date(params.value).toLocaleString() : "-",
+    },
 
     {
       field: "delete",
@@ -175,11 +189,16 @@ function NetworkTest() {
       width: 150,
       renderCell: (params) =>
         !params.row.timeUploaded ? (
-          <IconButton onClick={() => deleteExamination(params.row._id)}>
+          <IconButton
+            disabled={!params.row.timeUploaded}
+            onClick={() => deleteExamination(params.row._id)}
+          >
             <Delete color="error" />
           </IconButton>
         ) : (
-          <Typography variant="overline">Uploaded</Typography>
+          <IconButton disabled>
+            <Delete />
+          </IconButton>
         ),
     },
   ];
@@ -352,6 +371,7 @@ function NetworkTest() {
 export default NetworkTest;
 
 function UploadTest({ params }) {
+  console.log(params.row);
   const [summary, setSummary] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -359,7 +379,7 @@ function UploadTest({ params }) {
 
   const refreshSlice = useSelector((state) => state.refreshSlice);
 
-  const uploadTest = async () => {
+  const viewSummary = async () => {
     setLoading(true);
     const { data, error } = await appHttpService.get(
       "networktest/testsummary",
@@ -370,14 +390,30 @@ function UploadTest({ params }) {
 
     if (data) {
       setSummary(data);
-      console.log(data);
-      // dispatch(setRefresh(!refreshSlice));
-      // toast.success(data);
     }
 
     if (error) {
       toast.error(error);
     }
+    setLoading(false);
+  };
+
+  const uploadTest = async () => {
+    setLoading(true);
+    const response = await appHttpService.get("networktest/upload", {
+      params: { id: params.row._id },
+    });
+
+    if (response.data) {
+      toast.success(response.data);
+      setSummary(null);
+    }
+
+    if (response.error) {
+      toast.error(response.error);
+    }
+    dispatch(setRefresh(!refreshSlice));
+
     setLoading(false);
   };
   return (
@@ -387,7 +423,7 @@ function UploadTest({ params }) {
         loading={loading}
         disabled={!params.row.ended}
         loadingPosition="end"
-        onClick={uploadTest}
+        onClick={viewSummary}
       >
         <Typography variant="caption">Upload</Typography>
       </Button>
@@ -477,6 +513,7 @@ function UploadTest({ params }) {
           </Modal.Body>
           <Modal.Footer className="border-0 bg-light">
             <Button
+              onClick={uploadTest}
               startIcon={<ArrowUpward />}
               disabled={!summary.canUpload}
               variant="contained"
