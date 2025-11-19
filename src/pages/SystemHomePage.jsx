@@ -182,6 +182,25 @@ function SystemHomePage() {
               <Typography textTransform={"uppercase"}>
                 {centreDetail.CentreName}
               </Typography>
+
+              <div>
+                {!loading && systemInfo && (
+                  <Button
+                    variant="contained"
+                    disabled={registering}
+                    onClick={registerComputer}
+                    sx={{
+                      backgroundColor: "#FF8282",
+                      "&:hover": { backgroundColor: "#e67373" },
+                    }}
+                    endIcon={<DesktopMac />}
+                    loading={registering}
+                    loadingPosition="end"
+                  >
+                    Register Computer
+                  </Button>
+                )}
+              </div>
             </div>
           )}
         </div>
@@ -233,23 +252,6 @@ function SystemHomePage() {
                     {label}: <b>{value}</b>
                   </Typography>
                 ))}
-
-                <div className="mt-5">
-                  <Button
-                    variant="contained"
-                    disabled={registering}
-                    onClick={registerComputer}
-                    sx={{
-                      backgroundColor: "#FF8282",
-                      "&:hover": { backgroundColor: "#e67373" },
-                    }}
-                    endIcon={<DesktopMac />}
-                  >
-                    {registering
-                      ? "Registering..."
-                      : "Register as new computer"}
-                  </Button>
-                </div>
               </div>
             )}
           </div>
@@ -288,9 +290,9 @@ function SystemHomePage() {
           </div>
         </div>
       </div>
-      <div className="text-center">
+      {/* <div className="text-center">
         <Typography variant="caption">Version {appVersion}</Typography>
-      </div>
+      </div> */}
     </div>
   );
 }

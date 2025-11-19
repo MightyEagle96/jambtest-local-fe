@@ -133,7 +133,7 @@ function NetworkTest() {
       headerName: "Upload",
       width: 150,
       renderCell: (params) =>
-        params.row.status === "uploaded" ? (
+        params.row.status === "uploaded" || params.row.timeUploaded ? (
           <Typography color="success" variant="overline">
             Uploaded
           </Typography>
@@ -300,7 +300,7 @@ function NetworkTest() {
             </div>
             <div className="col-lg-3">
               <Button onClick={() => setShow(true)} variant="contained">
-                Create new network test
+                Create test
               </Button>
             </div>
           </div>
@@ -371,7 +371,6 @@ function NetworkTest() {
 export default NetworkTest;
 
 function UploadTest({ params }) {
-  console.log(params.row);
   const [summary, setSummary] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -515,6 +514,8 @@ function UploadTest({ params }) {
             <Button
               onClick={uploadTest}
               startIcon={<ArrowUpward />}
+              loading={loading}
+              loadingPosition="start"
               disabled={!summary.canUpload}
               variant="contained"
             >

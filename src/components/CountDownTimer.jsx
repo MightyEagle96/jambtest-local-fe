@@ -119,26 +119,20 @@ function CountDownTimer() {
             <div className="d-flex justify-content-between">
               <div className="">
                 <Typography variant="caption">Network Test ID:</Typography>
-                <Typography
-                  variant="h5"
-                  fontWeight={700}
-                  textTransform={"uppercase"}
-                >
+                <Typography fontWeight={500} textTransform={"uppercase"}>
                   {networkTestDetail.examId}
                 </Typography>
               </div>
 
               <div>
                 <Typography variant="caption">Duration:</Typography>
-                <Typography variant="h5" fontWeight={700}>
+                <Typography fontWeight={500}>
                   {networkTestDetail.duration / 1000 / 60} mins
                 </Typography>
               </div>
               <div>
                 <Typography variant="caption">Time Left:</Typography>
-                <Typography variant="h5" fontWeight={700}>
-                  {format(timeLeft)}
-                </Typography>
+                <Typography fontWeight={500}>{format(timeLeft)}</Typography>
               </div>
             </div>
           </div>
@@ -169,13 +163,13 @@ function CountDownTimer() {
           <div className="mt-3 rounded p-3 rounded bg-light">
             <div className="mb-3">
               <Typography variant="caption">Question</Typography>
-              <Typography fontSize={22}>{question?.question}</Typography>
+              <Typography>{question?.question}</Typography>
             </div>
             <div className="mb-3">
               <Typography variant="caption">Options</Typography>
 
               {question?.options.map((option, index) => (
-                <Typography fontSize={18} key={index} className="mb-4">
+                <Typography key={index} className="mb-4">
                   {index + 1}. {option}
                 </Typography>
               ))}
