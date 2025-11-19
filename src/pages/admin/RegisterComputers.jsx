@@ -313,7 +313,13 @@ function RegisterComputers() {
           </div>
         </div>
       </div>
-      <Modal size="lg" centered show={show} onHide={handleClose}>
+      <Modal
+        size="lg"
+        centered
+        show={show}
+        onHide={handleClose}
+        backdrop="static"
+      >
         <Modal.Header closeButton>
           <Modal.Title>Important Announcements</Modal.Title>
         </Modal.Header>
@@ -346,7 +352,9 @@ function RegisterComputers() {
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <Button onClick={registerComputers}>Upload Computers</Button>
+          <Button onClick={registerComputers} loading={loading}>
+            Upload Computers
+          </Button>
         </Modal.Footer>
       </Modal>
     </div>
