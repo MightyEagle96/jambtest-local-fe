@@ -196,10 +196,7 @@ function NetworkTest() {
       width: 150,
       renderCell: (params) =>
         !params.row.timeUploaded ? (
-          <IconButton
-            disabled={!params.row.timeUploaded}
-            onClick={() => deleteExamination(params.row._id)}
-          >
+          <IconButton onClick={() => deleteExamination(params.row._id)}>
             <Delete color="error" />
           </IconButton>
         ) : (
