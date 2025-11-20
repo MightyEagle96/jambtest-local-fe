@@ -5,6 +5,8 @@ import NetworkTest from "../pages/admin/NetworkTestList";
 import RegisterComputers from "../pages/admin/RegisterComputers";
 import NavbarComponent from "../components/NavbarComponent";
 import NetworkTestPage from "../pages/admin/ViewNetworkTest";
+import TestSummary from "../pages/admin/TestSummary";
+import NotFound from "../pages/NotFound";
 
 function PrivateAdminRoutes() {
   const routes = [
@@ -12,7 +14,9 @@ function PrivateAdminRoutes() {
     { path: "/registercomputers", element: <RegisterComputers /> },
     { path: "/networktest", element: <NetworkTest /> },
     { path: "/networktest/:id", element: <NetworkTestPage /> },
+    { path: "/testsummary/:id", element: <TestSummary /> },
     { path: "/infractions", element: <InfractionReport /> },
+    { path: "*", element: <NotFound /> },
   ];
 
   return (

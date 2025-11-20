@@ -28,10 +28,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { Table } from "react-bootstrap";
 
 const thingsToNote = [
-  "The test duration must not be less than 60 minutes",
-  "You must attain your centre's capacity, with the number of connected computers",
-  "Network losses count must be below 45",
-  "Response throughput must not be less than 90%",
+  "The test duration must not be less than 60 minutes.",
+  "You must attain or exceed your centre's capacity, with the number of connected computers.",
+  "Network losses count must be below 45.",
+  "Response throughput must not be less than 90%.",
 ];
 function NetworkTest() {
   const [show, setShow] = useState(false);
@@ -107,7 +107,14 @@ function NetworkTest() {
       headerName: "Test",
       width: 200,
       renderCell: (params) => (
-        <Nav.Link as={Link} to={`/admin/networktest/${params.row._id}`}>
+        <Nav.Link
+          as={Link}
+          to={
+            params.row.timeUploaded
+              ? `/admin/testsummary/${params.row._id}`
+              : `/admin/networktest/${params.row._id}`
+          }
+        >
           <p className=" text-success">
             View Test <ArrowRight />
           </p>
@@ -326,7 +333,7 @@ function NetworkTest() {
             <div className="mb-4">
               <div className="text-center mb-4">
                 <Typography variant="h5" fontWeight={700}>
-                  NETWORK TEST DURATION
+                  TEST DURATION
                 </Typography>
               </div>
               <div>
@@ -341,11 +348,13 @@ function NetworkTest() {
             <div className="mb-4">
               <Alert severity="info">
                 <AlertTitle>
-                  Before you can be be able to upload a network test result
+                  Before you can be be able to upload this test result
                 </AlertTitle>
                 <ol className="pl-4">
                   {thingsToNote.map((note, index) => (
-                    <li key={index}>{note}</li>
+                    <li key={index} className="mb-3">
+                      {note}
+                    </li>
                   ))}
                 </ol>
               </Alert>
@@ -360,7 +369,7 @@ function NetworkTest() {
             onClick={createNetworkTest}
             variant="contained"
           >
-            create new test
+            create test
           </Button>
         </Modal.Footer>
       </Modal>
