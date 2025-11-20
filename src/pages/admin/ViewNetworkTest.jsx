@@ -5,7 +5,7 @@ import { Button, Chip, IconButton, Typography } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import format from "format-duration";
 import { DesktopMacOutlined, Visibility } from "@mui/icons-material";
-import { Modal } from "react-bootstrap";
+import { Modal, Table } from "react-bootstrap";
 import Swal from "sweetalert2";
 import { toast } from "react-toastify";
 
@@ -21,6 +21,8 @@ function NetworkTestPage() {
     page: 0, // DataGrid uses 0-based index
     pageSize: 50, // rows per page
   });
+  const [disconnectedComputers, setDisconnectedComputers] = useState([]);
+  const [networkLosses, setNetworkLosses] = useState([]);
 
   const navigate = useNavigate();
   const getData = async () => {
@@ -169,6 +171,27 @@ function NetworkTestPage() {
     });
   };
 
+  const getDisconnectedComputers = async () => {
+    const { data } = await appHttpService.get(
+      "networktest/disconnectedandcomputerswithnetworklosses",
+      { params: { id } }
+    );
+
+    if (data) {
+      setDisconnectedComputers(data.disconnected);
+    }
+  };
+  const getNetworkLosses = async () => {
+    const { data } = await appHttpService.get(
+      "networktest/disconnectedandcomputerswithnetworklosses",
+      { params: { id } }
+    );
+
+    if (data) {
+      setNetworkLosses(data.networkLosses);
+    }
+  };
+
   return (
     <div>
       <div className="mt-4 ">
@@ -249,7 +272,10 @@ function NetworkTestPage() {
                         </div>
 
                         <div className="">
-                          <IconButton>
+                          <IconButton
+                            disabled={dashboard.disconnected === 0}
+                            onClick={getDisconnectedComputers}
+                          >
                             <Visibility />
                           </IconButton>
                         </div>
@@ -279,7 +305,12 @@ function NetworkTestPage() {
                         </div>
 
                         <div className="">
-                          <IconButton>
+                          <IconButton
+                            disabled={
+                              dashboard.computersWithNetworkLosses === 0
+                            }
+                            onClick={getNetworkLosses}
+                          >
                             <Visibility />
                           </IconButton>
                         </div>
@@ -365,6 +396,68 @@ function NetworkTestPage() {
               </div>
             </div>
           )}
+        </Modal.Body>
+      </Modal>
+
+      <Modal
+        show={disconnectedComputers.length > 0}
+        onHide={() => setDisconnectedComputers([])}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Disconnected Computers</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Table striped borderless>
+            <thead>
+              <tr>
+                <th>S.N</th>
+                <th>IP Address</th>
+              </tr>
+            </thead>
+            <tbody>
+              {disconnectedComputers.map((c, i) => (
+                <tr key={i}>
+                  <td>
+                    <Typography variant="body2">{i + 1}</Typography>
+                  </td>
+                  <td>
+                    <Typography variant="body2">{c.ipAddress}</Typography>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+        </Modal.Body>
+      </Modal>
+
+      <Modal
+        show={networkLosses.length > 0}
+        onHide={() => setNetworkLosses([])}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Computers with network losses</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Table striped borderless>
+            <thead>
+              <tr>
+                <th>S.N</th>
+                <th>IP Address</th>
+              </tr>
+            </thead>
+            <tbody>
+              {networkLosses.map((c, i) => (
+                <tr key={i}>
+                  <td>
+                    <Typography variant="body2">{i + 1}</Typography>
+                  </td>
+                  <td>
+                    <Typography variant="body2">{c.ipAddress}</Typography>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
         </Modal.Body>
       </Modal>
     </div>
