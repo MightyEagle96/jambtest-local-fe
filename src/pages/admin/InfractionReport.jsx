@@ -15,10 +15,11 @@ function InfractionReport() {
   });
   const [rows, setRows] = useState([]);
   const [rowCount, setRowCount] = useState(0);
-
+  const [loading, setLoading] = useState(false);
   const [centresInvolved, setCentresInvolved] = useState([]);
 
   const getData = async () => {
+    setLoading(true);
     const { data, error } = await appHttpService("computer/infractionreports", {
       params: {
         page: paginationModel.page + 1,
@@ -27,12 +28,12 @@ function InfractionReport() {
     });
 
     if (data) {
-      console.log(data);
       setRows(data.results);
-      console.log(data);
+
       setRowCount(data.total);
       // setComputers(data.totalComputers);
     }
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -122,6 +123,7 @@ function InfractionReport() {
       </div>
       <div className="p-3">
         <DataGrid
+          loading={loading}
           columns={columns}
           rows={rows}
           pagination
@@ -130,7 +132,7 @@ function InfractionReport() {
         />
       </div>
       <Modal
-        size="lg"
+        size="xl"
         show={centresInvolved.length > 0}
         onHide={() => setCentresInvolved([])}
       >
