@@ -77,11 +77,12 @@ function SystemHomePage() {
       if (!result.isConfirmed) return;
       try {
         setRegistering(true);
-        const { data } = await appHttpService.post(
+        const { data, error } = await appHttpService.post(
           "computer/register",
           systemInfo
         );
         if (data) toast.success(data);
+        if (error) toast.error(error);
       } catch (err) {
         toast.error(err?.message || "Error registering computer");
       } finally {

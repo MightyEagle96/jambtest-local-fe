@@ -4,7 +4,7 @@ import { appHttpService } from "../../httpServices/appHttpService";
 import { Button, Chip, IconButton, Typography } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import format from "format-duration";
-import { DesktopMacOutlined } from "@mui/icons-material";
+import { DesktopMacOutlined, Visibility } from "@mui/icons-material";
 import { Modal } from "react-bootstrap";
 import Swal from "sweetalert2";
 import { toast } from "react-toastify";
@@ -222,49 +222,69 @@ function NetworkTestPage() {
               </div>
             </div>
             <div className="mb-5">
-              <div className="container">
+              <div className="p-3">
                 {dashboard && (
                   <div>
-                    <div className="d-flex flex-wrap bg-light p-3 text-muted">
-                      <div className="col-lg-3">
+                    <div className="d-flex flex-wrap justify-content-center text-muted">
+                      <div className="col-lg-3 m-1 bg-light p-2  ps-4 rounded">
                         <Typography variant="overline">computers</Typography>
                         <Typography variant="h6">
                           {dashboard.totalComputers}
                         </Typography>
                       </div>
-                      <div className="col-lg-3">
+                      <div className="col-lg-3 m-1 bg-light p-2 ps-4 rounded">
                         <Typography variant="overline">connected</Typography>
                         <Typography variant="h6">
                           {dashboard.connected}
                         </Typography>
                       </div>
-                      <div className="col-lg-3">
-                        <Typography variant="overline">disconnected</Typography>
-                        <Typography variant="h6">
-                          {dashboard.disconnected}
-                        </Typography>
+                      <div className="col-lg-3 d-flex justify-content-between align-items-end m-1 bg-light p-2 ps-4 pe-4 rounded">
+                        <div>
+                          <Typography variant="overline">
+                            disconnected
+                          </Typography>
+                          <Typography variant="h6">
+                            {dashboard.disconnected}
+                          </Typography>
+                        </div>
+
+                        <div className="">
+                          <IconButton>
+                            <Visibility />
+                          </IconButton>
+                        </div>
                       </div>
-                      <div className="col-lg-3">
+                      <div className="col-lg-3 m-1 bg-light p-2 ps-4 rounded">
                         <Typography variant="overline">ended</Typography>
                         <Typography variant="h6">{dashboard.ended}</Typography>
                       </div>
-                      <div className="col-lg-3">
-                        <Typography variant="overline">
-                          Total Network Losses
-                        </Typography>
-                        <Typography variant="h6">
-                          {dashboard.totalNetworkLosses}
-                        </Typography>
+                      <div className="col-lg-3 m-1 bg-light p-2  ps-4 rounded">
+                        <div>
+                          <Typography variant="overline">
+                            Total Network Losses
+                          </Typography>
+                          <Typography variant="h6">
+                            {dashboard.totalNetworkLosses}
+                          </Typography>
+                        </div>
                       </div>
-                      <div className="col-lg-3">
-                        <Typography variant="overline">
-                          Computers with network losses
-                        </Typography>
-                        <Typography variant="h6">
-                          {dashboard.computersWithNetworkLosses}
-                        </Typography>
+                      <div className="col-lg-3 d-flex justify-content-between align-items-end m-1 bg-light p-2 ps-4 pe-4 rounded">
+                        <div>
+                          <Typography variant="overline">
+                            Computers with network losses
+                          </Typography>
+                          <Typography variant="h6">
+                            {dashboard.computersWithNetworkLosses}
+                          </Typography>
+                        </div>
+
+                        <div className="">
+                          <IconButton>
+                            <Visibility />
+                          </IconButton>
+                        </div>
                       </div>
-                      <div className="col-lg-3">
+                      <div className="col-lg-3 m-1 bg-light p-2 ps-4 rounded">
                         <Typography variant="overline">
                           Responses/Expected
                         </Typography>
@@ -272,7 +292,7 @@ function NetworkTestPage() {
                           {dashboard.totalResponses}/{dashboard.expected}
                         </Typography>
                       </div>
-                      <div className="col-lg-3">
+                      <div className="col-lg-3 m-1 bg-light p-2 ps-4 rounded">
                         <Typography variant="overline">
                           Response Throughput
                         </Typography>
